@@ -1,4 +1,4 @@
 hatupist
 ========
 
-Typing speed practice program using gtk2hs and Haskell
+Typing speed practice program using Gtk2hs and Haskell
