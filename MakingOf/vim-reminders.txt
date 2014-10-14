@@ -1,0 +1,13 @@
+How to wrap all lines at 80 characters without breaking any words, and 
+preserve shorter lines:
+
+:set formatoptions+=w
+:set tw=80
+gggqG
+
+Use the following mapping to format the current paragraph:
+
+:nnoremap Q gqip
+
+
+

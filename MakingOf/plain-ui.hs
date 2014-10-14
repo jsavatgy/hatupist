@@ -6,3 +6,4 @@ main = do
   onDestroy window mainQuit
   widgetShowAll window
   mainGUI
+
