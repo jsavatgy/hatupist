@@ -28,8 +28,8 @@ main = do
   sep2 <- hSeparatorNew
   boxPackStart vbox sep2 PackNatural 3
 
-  textview <- textViewNew
-  boxPackStart vbox textview PackNatural 3
+  entry <- entryNew
+  boxPackStart vbox entry PackNatural 3
  
   widgetShowAll window
   mainGUI
