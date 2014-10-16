@@ -1,0 +1,32 @@
+MakingOf $ cd ..
+
+hatupist $ git status
+On branch master
+Your branch is up-to-date with 'origin/master'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+	modified:   MakingOf/plain-ui-002.hs
+	modified:   MakingOf/plain-ui-002.png
+	modified:   MakingOf/plain-ui.fi.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+hatupist $ git add .
+
+hatupist $ git commit -m "#4"
+[master e32e98f] #4
+ 3 files changed, 21 insertions(+), 4 deletions(-)
+ rewrite MakingOf/plain-ui-002.png (99%)
+
+hatupist $ git push origin +HEAD
+Counting objects: 11, done.
+Delta compression using up to 2 threads.
+Compressing objects: 100% (6/6), done.
+Writing objects: 100% (6/6), 3.93 KiB | 0 bytes/s, done.
+Total 6 (delta 3), reused 0 (delta 0)
+To https://github.com/jsavatgy/hatupist
+   928ef3b..e32e98f  HEAD -> master
+
