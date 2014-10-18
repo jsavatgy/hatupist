@@ -38,4 +38,24 @@ Esimerkkinä tyypin `Label` komponentti:
   miscSetAlignment label1 0 0
   boxPackStart vbox label1 PackNatural 0
 ```
+# Tekstikentän asettelua
+
+Kuvassa näkyvän tekstikentän sinisen reunuksen saamme pois komennolla
+
+```
+  entrySetHasFrame entry False
+```
+
+Lisäksi haluamme tekstirivit täsmällisesti allekkain. Siirrämme tekstiä kahdella pikselillä oikealle:
+
+```
+  miscSetPadding   label1 2 0
+  miscSetPadding   label2 2 0
+```
+
+Emme tarvitse myöskään erottimia tekstikenttien väliin, joten poistamme ne.
+
+![](https://github.com/jsavatgy/hatupist/blob/master/MakingOf/plain-ui-003.png)
+
+Ohjelmakoodi tähän mennessä: [plain-ui-003.hs](https://github.com/jsavatgy/hatupist/blob/master/MakingOf/plain-ui-003.hs)
 

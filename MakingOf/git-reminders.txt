@@ -1,3 +1,8 @@
+# git status && git add . &&  git commit -m "#6" && git push origin +HEAD
+# git status && git add . &&  git commit -m "#7" && git push origin +HEAD
+# git status && git add . &&  git commit -m "#8" && git push origin +HEAD
+
+
 MakingOf $ cd ..
 
 hatupist $ git status
