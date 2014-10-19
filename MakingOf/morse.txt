@@ -1,0 +1,14 @@
+Morse-aakkoset.
+
+Graafinen muistisääntö.
+
+Piirretään suuri A-kirjain. Väritetään kirjaimen huippupiste ja vaakaviiva. A-kirjain on siten ti-taa.
+
+Seuraavaksi piirretään I-kirjain. Väritetään kirjaimen molemmat päät. I-kirjain on ti-ti.
+
+E-kirjain on keskimmäisen poikkiviivan leikkauspiste pystyviivan kanssa. E-kirjain on ti.
+
+O-kirjaimessa on pitkästi ympyrän kehää väritettäväksi. Täytetään kehä kolmella viivalla. O-kirjain on taa-taa-taa.
+
+U-kirjaimesta väritetään molemmat huippupisteet ja pohjakaari. U-kirjain on ti-ti-taa.
+
