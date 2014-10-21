@@ -99,3 +99,5 @@ Prelude> :q
 Leaving GHCi.
 ```
 
+Ohjelmakoodi: [readFile.hs](https://github.com/jsavatgy/hatupist/blob/master/MakingOf/readFile.hs)
+
