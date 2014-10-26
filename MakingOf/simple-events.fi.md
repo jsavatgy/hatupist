@@ -1,8 +1,10 @@
 # Tapahtumankäsittelyä
 
-Luodaan ikkuna kuten aiemmin.
+Tarkastellaan lähdekoodia: [simple-events.hs](simple-events.hs)
 
-![](https://github.com/jsavatgy/hatupist/blob/master/MakingOf/simple-events.png)
+Ohjelma luo tutun ikkunan.
+
+![](simple-events.png)
 
 Lähdekoodi: [simple-events.hs](https://github.com/jsavatgy/hatupist/blob/master/MakingOf/simple-events.hs)
 
