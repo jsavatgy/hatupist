@@ -6,8 +6,6 @@ Ohjelma luo tutun ikkunan.
 
 ![](simple-events.png)
 
-Lähdekoodi: [simple-events.hs](https://github.com/jsavatgy/hatupist/blob/master/MakingOf/simple-events.hs)
-
 ## Tekstikentän tekstin muutos
 
 Funktiolla `onEditableChanged` tekstikenttä `entry` saa tapahtumankäsittelijän `entryTextChanged`. 
