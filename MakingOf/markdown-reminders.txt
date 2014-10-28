@@ -1,0 +1,7 @@
+
+echo "<meta charset=\"utf-8\">" >result-tables.fi.html
+markdown result-tables.fi.md >>result-tables.fi.html
+ 
+
+
+
