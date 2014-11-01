@@ -37,7 +37,7 @@ main = do
   initGUI
   window <- windowNew
   menuBar <- createMenuBar menuBarDescr
-  set window [ windowTitle := "Manual Menubar Demo",
+  set window [ windowTitle := "Menubar.hs",
                containerChild := menuBar ]
   onDestroy window mainQuit
   widgetShowAll window
