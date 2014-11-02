@@ -1,14 +1,17 @@
 Morse-aakkoset.
 
-Graafinen muistisääntö.
+Graafinen muistisääntö. 
 
-Piirretään suuri A-kirjain. Väritetään kirjaimen huippupiste ja vaakaviiva. A-kirjain on siten ti-taa.
+Piirretään suuri A-kirjain. Väritetään huippupiste ja vaakaviiva. A-kirjain on siten ti-taa. Piirretään I-kirjain. I-kirjaimesta väritetään pisteet molempiin päihin. I-kirjain on ti-ti. E-kirjain on keskimmäisen poikkiviivan ja pystyviivan leikkauspiste. E-kirjain on ti. O-kirjaimessa on pitkästi ympyrän kaarta väritettäväksi. Parhaiten se onnistuu täyttämällä kaari kolmella viivalla. O-kirjain on taa-taa-taa. U-kirjaimesta väritetään molemmat huippupisteet ja pohjakaari. U-kirjain on ti-ti-taa.
 
-Seuraavaksi piirretään I-kirjain. Väritetään kirjaimen molemmat päät. I-kirjain on ti-ti.
+N-kirjaimesta väritetään viivalla ensimmäinen pystysakara ja lisätään piste viimeisen pystysakaran kärkeen. N-kirjain on taa-ti. S-kirjain on S-kirjaimen ja kirjaimen lävitse piirretyn pystyviivan leikkaus, eli kolme pistettä. S-kirjain on ti-ti-ti. T-kirjain on kirjaimen vaakaviiva. T-kirjain on taa. L-kirjain saadaan värittämällä pystyviivaan piste, viiva ja piste, sekä vaakaviivan kärkeen piste. L-kirjain on ti-taa-ti-ti. R-kirjaimesta väritetään kirjaimen jalusta, pisteet jalkoina, ja viiva kannattelemassa puolikaarta. R-kirjain on ti-taa-ti.
 
-E-kirjain on keskimmäisen poikkiviivan leikkauspiste pystyviivan kanssa. E-kirjain on ti.
+K-kirjain saadaan värittämällä vinoviivat ja vinoviivojen ja pystyviivan leikkauspiste näiden välissä. K-kirjain on taa-ti-taa. M-kirjaimesta väritetään symmetriset pystyviivat. M-kirjain on taa-taa. J-kirjain alkaa pisteellä kaaren kärjessä, loput kaaresta väritetään kolmella viivalla. J-kirjain on ti-taa-taa-taa. D-kirjain saadaan värittämällä pystyviiva ja pisteet symmetrisesti puolikaarella. D-kirjain on taa-ti-ti.
 
-O-kirjaimessa on pitkästi ympyrän kehää väritettäväksi. Täytetään kehä kolmella viivalla. O-kirjain on taa-taa-taa.
+P-kirjain on hieman monimutkainen. Se saadaan seuraamalla yhtenäistä reittiä pystyviivan alapisteestä, viivan avulla pystyviivan yläpäähän, jatkamalla puolikaarta pitkin viivalla ja päättämällä kaari pisteellä. P-kirjain on ti-taa-taa-ti. V-kirjain on kuvion kolme kärkipistettä, sekä näiden alle kuvion ulkopuolelle piirrettävä viiva. V-kirjain on ti-ti-ti-taa. C-kirjaimessa täytetään puolikaari kahdella viiva-pisteen yhdistelmällä. C-kirjain on taa-ti-taa-ti. G-kirjaimen puolikaari täytetään kahdella viivalla ja lisätään piste vaakaosan kärkeen. G-kirjain on taa-taa-ti. B-kirjain koostuu pystyviivasta ja kolmesta pisteestä kirjaimen vaakaviivoilla. B-kirjain on taa-ti-ti-ti.
 
-U-kirjaimesta väritetään molemmat huippupisteet ja pohjakaari. U-kirjain on ti-ti-taa.
+F-kirjain on kaksi pistettä ensimmäisen vaakaviivan kärjissä, poikkiviiva ja piste pystyviivan alakärjessä. F-kirjain on ti-ti-taa-ti. H-kirjaimesta väritetään pisteet pystyviivojen molempiin kärkiin. H-kirjain on ti-ti-ti-ti. Q-kirjain muistuttaa O-kirjainta, mutta sen kaari katkeaa kahden kolmasosan kohdalta vinoviivaan, jonka kärkeen väritetään piste. Q-kirjain on taa-taa-ti-taa. W-kirjain on V-kirjaimen leikkauspiste sekä molempien näiden alakaaret. W-kirjain on ti-taa-taa.
+
+X-kirjain on vinoviiva ylös vasemmalle, piste alas vasemmalle, piste alas oikealle ja vinoviiva ylös oikealle. X-kirjain on taa-ti-ti-taa. Y-kirjaimesta väritetään pystyviiva, vinoviivojen leikkauspiste ja kaksi vinoviivaa. Y-kirjain on taa-ti-taa-taa. Z-kirjain on vaakaviiva, vinoviiva ja pisteet viimeisen vaakaviivan kärjissä. Z-kirjain on taa-taa-ti-ti.
+
 
