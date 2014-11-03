@@ -1,7 +1,10 @@
 
 echo "<meta charset=\"utf-8\">" >result-tables.fi.html
 markdown result-tables.fi.md >>result-tables.fi.html
- 
 
-
+fileprefix="linefeed.fi" 
+echo "<meta charset=\"utf-8\">" >$fileprefix.html
+markdown $fileprefix.md >>$fileprefix.html
+firefox $fileprefix.html
+rm $fileprefix.html
 

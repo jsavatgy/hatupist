@@ -16,5 +16,6 @@ gamestatus.fi.md
 
 menubar.hs
 
+linefeed.fi.md
 linefeed.hs
 
