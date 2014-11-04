@@ -51,7 +51,7 @@ Tässä funktiot `fromRational` ja `toRational` ovat esimerkkejä tyyppiluokkien
 
 Puskurin muutoksiin vastaava koodi on nyt seuraavassa muodossa:
 
-[code]
+```
 whenEntryChanged gui settings lines gsRef = do
   pt  <- getPOSIXTime
   gs  <- readIORef gsRef
