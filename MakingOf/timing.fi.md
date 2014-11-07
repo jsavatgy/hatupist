@@ -55,7 +55,7 @@ Puskurin muutoksiin vastaava koodi on nyt seuraavassa muodossa:
 whenEntryChanged gui settings lines gsRef = do
   pt  <- getPOSIXTime
   gs  <- readIORef gsRef
-  txt <- entryGetTxt (gEntry gui)
+  txt <- entryGetText (gEntry gui)
   let label1Str = head (oLabelStrs gs)
       status = getStatus txt label1Str (oldlen gs)
       f = case (status,oldStatus gs) of
@@ -63,7 +63,7 @@ whenEntryChanged gui settings lines gsRef = do
         (Correct,_)     -> whenCorrect
         (Error,Correct) -> whenNewError
         otherwise       -> whenOther status (oldStatus gs)
-  newgs <- f gui settings lines pt gs
+  newgs <- f gui settings pt gs
   writeIORef gsRef newgs {
     oldStatus = status,
     oldlen = max (length (commonPrefix txt label1Str)) (oldlen gs)
@@ -71,24 +71,24 @@ whenEntryChanged gui settings lines gsRef = do
   when (label1Str == txt) (advanceLine gui lines gsRef gs)
   return ()
 
-whenNotStarted status gui settings lines pt gs = do
+whenNotStarted status gui settings pt gs = do
   putStrLn ("Started with " ++ (show status))
   return gs { 
     startTime = pt 
   }
 
-whenCorrect gui settings lines pt gs = do
+whenCorrect gui settings pt gs = do
   print "Correct."
   let s = secondsFrom (startTime gs) pt
       i = intervalNumber s
   print (s,i)
   return gs
 
-whenNewError gui settings lines pt gs = do
+whenNewError gui settings pt gs = do
   print "New Error."
   return gs
 
-whenOther status oldStatus gui settings lines pt gs = do
+whenOther status oldStatus gui settings pt gs = do
   putStrLn ("Other with " ++ (show (status,oldStatus)))
   return gs
 ```
@@ -113,6 +113,8 @@ Started with Correct
 "Correct."
 (36.21953082084656,1)
 ```
+
+Ohjelmakoodi [timing.hs](timing.hs)
 
 Ensi kerralla käytämme tätä hyväksi, ja keräämme nämä tiedot niitä vastaaviin tietorakenteisiin.
 
