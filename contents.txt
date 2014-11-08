@@ -5,7 +5,7 @@ plain-ui-002.hs
 readFile.fi.md
 readFile.hs
 morse.txt
-readFileResul.txt
+readFileResult.txt
 
 simple-events.fi.md
 simple-events.hs
@@ -18,4 +18,9 @@ menubar.hs
 
 linefeed.fi.md
 linefeed.hs
+
+timing.fi.md
+timing.hs
+timing-02.fi.md
+timing-02.hs
 

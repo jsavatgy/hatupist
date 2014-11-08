@@ -1,3 +1,7 @@
+
+history | gvim -
+setxkbmap fi -print | xkbcomp - - | xkbprint - - -nokc -lc en_US | ps2pdf - > qwerty.pdf
+
 How to wrap all lines at 80 characters without breaking any words, and 
 preserve shorter lines:
 

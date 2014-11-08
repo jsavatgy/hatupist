@@ -3,7 +3,7 @@
 Hatupist on ohjelma kirjoitusnopeuden harjoitteluun. Se on kirjoitettu Haskell-kielellä ja käyttää Gtk2hs-käyttöliittymäkirjastoa.
 
 Hakemistossa
-[Making Of](/MakingOf)
+[/MakingOf](/MakingOf)
 voit seurata kuinka ohjelma valmistuu pala palalta.
 
 ![](Hatupist_002.png)
