@@ -8,3 +8,6 @@ markdown $fileprefix.md >>$fileprefix.html
 firefox $fileprefix.html
 rm $fileprefix.html
 
+ls *.fi.md >fi-md-files.txt
+
+

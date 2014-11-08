@@ -56,7 +56,7 @@ on ti-ti-taa.
 Edellinen ohjelmakoodi tulostaa nyt:
 
 ```
-$ runhaskell luetiedosto.hs 
+$ runhaskell readFile.hs 
 "Morse-aakkoset.\n\nGraafinen muistis\228\228nt\246.\n\nPiirret\228\228n su
 uri A-kirjain. V\228ritet\228\228n kirjaimen huippupiste ja vaakaviiva. A-k
 irjain on siten ti-taa.\n\nSeuraavaksi piirret\228\228n I-kirjain. V\228rit
@@ -99,5 +99,5 @@ Prelude> :q
 Leaving GHCi.
 ```
 
-Ohjelmakoodi: [readFile.hs](https://github.com/jsavatgy/hatupist/blob/master/MakingOf/readFile.hs)
+Ohjelmakoodi: [readFile.hs](readFile.hs)
 

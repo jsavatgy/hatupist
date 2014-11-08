@@ -19,15 +19,15 @@ Funktio `onDestroy` on tapahtumankäsittelijä, joka määrittää ikkunan käyt
 
 Tallenna ohjelma nimellä `plain-ui.hs` ja anna pääteikkunaan komento `runhaskell plain-ui.hs`. Ohjelma käynnistyy tulkattavassa muodossa ja tuottaa seuraavan ikkunan ruudulle: 
 
-![](https://github.com/jsavatgy/hatupist/blob/master/MakingOf/plain-ui.png)
+![](plain-ui.png)
 
 # Yksinkertainen käyttöliittymä.
 
-Katsotaan seuraavaksi tiedostoa [plain-ui-002.hs](https://github.com/jsavatgy/hatupist/blob/master/MakingOf/plain-ui-002.hs)
+Katsotaan seuraavaksi tiedostoa [plain-ui-002.hs](plain-ui-002.hs)
 
 Ajettaessa komennolla `runhaskell plain-ui-002.hs` ohjelma tuottaa seuraavan ikkunan:
 
-![](https://github.com/jsavatgy/hatupist/blob/master/MakingOf/plain-ui-002.png)
+![](plain-ui-002.png)
 
 Ohjelma sisältää kaksi tyypin `Label` komponenttia ja tekstikentän tyyppiä `Entry`. Ne luodaan funktioilla `labelNew` ja `entryNew`. Komponentit sijoitetaan vertikaaliseen laatikkoon `vbox` joka luodaan funktiolla `vBoxNew`. Näiden lisäksi käytetään erottimia `sep1` ja `sep2` tyhjän tilan saamiseksi komponenttien väliin. Erottimet luodaan funktiolla `hSeparatorNew`. Kukin komponentti paketoidaan vertikaaliseen laatikkoon `vbox` funktiolla  `boxPackStart`.
 
@@ -55,7 +55,7 @@ Lisäksi haluamme tekstirivit täsmällisesti allekkain. Siirrämme tekstiä kah
 
 Emme tarvitse myöskään erottimia tekstikenttien väliin, joten poistamme ne.
 
-![](https://github.com/jsavatgy/hatupist/blob/master/MakingOf/plain-ui-003.png)
+![](plain-ui-003.png)
 
-Ohjelmakoodi tähän mennessä: [plain-ui-003.hs](https://github.com/jsavatgy/hatupist/blob/master/MakingOf/plain-ui-003.hs)
+Ohjelmakoodi tähän mennessä: [plain-ui-003.hs](plain-ui-003.hs)
 
