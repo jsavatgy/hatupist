@@ -1,4 +1,6 @@
-# Tulostaulut S, I ja R
+# Tulostaulut R, S ja I
+
+![](result-tables-02.png)
 
 Tulostauluja on siis kolme, näistä istunnon S-taulu päivitetään puolen sekunnin välein. Kaksi muuta taulua päivitetään, kun siirrytään intervallista toiseen. Monadin sisällä tämä ehtolause ei ole kovin selkeästi luettava, mutta se on seuraavassa:
 

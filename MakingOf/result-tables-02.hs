@@ -155,7 +155,6 @@ createGUI = do
 
   set window [
     containerBorderWidth := 10,
-    windowTitle := "Hatupist",
     containerChild := outerVBox ]
 
   label1 <- labelNew (Just xxx)

@@ -1,0 +1,861 @@
+Hatupist. Kirjoitusnopeuden harjoitusohjelma. Käymme tässä lävitse kuinka ohjelma laaditaan pala palalta alkaen nollasta.
+
+# Tyhjä ikkuna.
+
+Seuraava ohjelma avaa yksinkertaisen tyhjän ikkunan:
+
+```
+import Graphics.UI.Gtk
+
+main = do
+  initGUI
+  window <- windowNew
+  onDestroy window mainQuit
+  widgetShowAll window
+  mainGUI
+```
+
+Funktio `onDestroy` on tapahtumankäsittelijä, joka määrittää ikkunan käyttäytymisen suljettaessa ikkuna esimerkiksi hiirellä ruksia naksautettaessa. Toimenpide yhdistetään funktioon `mainQuit`, joka on ohjelman lopetuskomento.
+
+Tallenna ohjelma nimellä `plain-ui.hs` ja anna pääteikkunaan komento `runhaskell plain-ui.hs`. Ohjelma käynnistyy tulkattavassa muodossa ja tuottaa seuraavan ikkunan ruudulle: 
+
+![](plain-ui.png)
+
+# Yksinkertainen käyttöliittymä.
+
+Katsotaan seuraavaksi tiedostoa [plain-ui-002.hs](plain-ui-002.hs)
+
+Ajettaessa komennolla `runhaskell plain-ui-002.hs` ohjelma tuottaa seuraavan ikkunan:
+
+![](plain-ui-002.png)
+
+Ohjelma sisältää kaksi tyypin `Label` komponenttia ja tekstikentän tyyppiä `Entry`. Ne luodaan funktioilla `labelNew` ja `entryNew`. Komponentit sijoitetaan vertikaaliseen laatikkoon `vbox` joka luodaan funktiolla `vBoxNew`. Näiden lisäksi käytetään erottimia `sep1` ja `sep2` tyhjän tilan saamiseksi komponenttien väliin. Erottimet luodaan funktiolla `hSeparatorNew`. Kukin komponentti paketoidaan vertikaaliseen laatikkoon `vbox` funktiolla  `boxPackStart`.
+
+Esimerkkinä tyypin `Label` komponentti:
+
+```
+  label1 <- labelNew (Just xxx)
+  miscSetAlignment label1 0 0
+  boxPackStart vbox label1 PackNatural 0
+```
+# Tekstikentän asettelua
+
+Kuvassa näkyvän tekstikentän sinisen reunuksen saamme pois komennolla
+
+```
+  entrySetHasFrame entry False
+```
+
+Lisäksi haluamme tekstirivit täsmällisesti allekkain. Siirrämme tekstiä kahdella pikselillä oikealle:
+
+```
+  miscSetPadding   label1 2 0
+  miscSetPadding   label2 2 0
+```
+
+Emme tarvitse myöskään erottimia tekstikenttien väliin, joten poistamme ne.
+
+![](plain-ui-003.png)
+
+Ohjelmakoodi tähän mennessä: [plain-ui-003.hs](plain-ui-003.hs)
+
+# Tekstitiedoston lukeminen
+
+Tekstitiedoston manipulointiin voisi käyttää vaikkapa seuraavanlaista koodia:
+
+```
+lineLen = 35
+
+main = do
+  originalText <- readFile ("morse.txt")
+  print originalText
+  let liness = colLines (collectWords (words (originalText)) lineLen)
+  let lines = map (++" ") liness
+  mapM_ putStrLn (lines)
+
+colLines (xs:xss) =
+  (unwords xs) : colLines xss
+colLines [] = []
+
+collectWords [] n = []
+collectWords ys n =
+  p1 : collectWords p2 n
+  where
+  (p1,p2) = splitAt (length (untilLen ys 0 n)) ys
+
+untilLen (t:ts) s n 
+  | s+x<n || s==0  = t : untilLen ts (s+x) n
+  | otherwise      = []
+  where
+  x = length t + 1
+untilLen [] s n = []
+```
+
+Kirjoitetaan tekstitiedostoon `morse.txt` kokeilumielessä seuraava teksti:
+
+```
+Morse-aakkoset.
+
+Graafinen muistisääntö.
+
+Piirretään suuri A-kirjain. Väritetään kirjaimen huippupiste ja 
+vaakaviiva. A-kirjain on siten ti-taa.
+
+Seuraavaksi piirretään I-kirjain. Väritetään kirjaimen molemmat päät. 
+I-kirjain on ti-ti.
+
+E-kirjain on keskimmäisen poikkiviivan leikkauspiste pystyviivan kanssa. 
+E-kirjain on ti.
+
+O-kirjaimessa on pitkästi ympyrän kehää väritettäväksi. Täytetään kehä 
+kolmella viivalla. O-kirjain on taa-taa-taa.
+
+U-kirjaimesta väritetään molemmat huippupisteet ja pohjakaari. U-kirjain 
+on ti-ti-taa.
+```
+
+Edellinen ohjelmakoodi tulostaa nyt:
+
+```
+$ runhaskell readFile.hs 
+"Morse-aakkoset.\n\nGraafinen muistis\228\228nt\246.\n\nPiirret\228\228n su
+uri A-kirjain. V\228ritet\228\228n kirjaimen huippupiste ja vaakaviiva. A-k
+irjain on siten ti-taa.\n\nSeuraavaksi piirret\228\228n I-kirjain. V\228rit
+et\228\228n kirjaimen molemmat p\228\228t. I-kirjain on ti-ti.\n\nE-kirjain
+ on keskimm\228isen poikkiviivan leikkauspiste pystyviivan kanssa. E-kirjai
+n on ti.\n\nO-kirjaimessa on pitk\228sti ympyr\228n keh\228\228 v\228ritett
+\228v\228ksi. T\228ytet\228\228n keh\228 kolmella viivalla. O-kirjain on ta
+a-taa-taa.\n\nU-kirjaimesta v\228ritet\228\228n molemmat huippupisteet ja p
+ohjakaari. U-kirjain on ti-ti-taa.\n\n"
+Morse-aakkoset. Graafinen 
+muistisääntö. Piirretään suuri 
+A-kirjain. Väritetään kirjaimen 
+huippupiste ja vaakaviiva. 
+A-kirjain on siten ti-taa. 
+Seuraavaksi piirretään I-kirjain. 
+Väritetään kirjaimen molemmat 
+päät. I-kirjain on ti-ti. 
+E-kirjain on keskimmäisen 
+poikkiviivan leikkauspiste 
+pystyviivan kanssa. E-kirjain on 
+ti. O-kirjaimessa on pitkästi 
+ympyrän kehää väritettäväksi. 
+Täytetään kehä kolmella viivalla. 
+O-kirjain on taa-taa-taa. 
+U-kirjaimesta väritetään molemmat 
+huippupisteet ja pohjakaari. 
+U-kirjain on ti-ti-taa. 
+```
+
+Tekstin manipulointiin tarvittavat rutiinit riippuvat hieman tekstitiedoston muodosta, ja periaatteessa tämän vaiheen voisi jopa sivuuttaa muokkaamalla tekstitiedosto valmiiksi tekstieditorilla. Haskell-kielen Prelude-kirjastosta käytettäviä funktioita olivat `words` ja `unwords`, joiden toimintaperiaate seuraavassa:
+
+```
+$ ghci
+Prelude> let ws = words "U-kirjaimesta väritetään molemmat huippupisteet ja pohjakaari"
+Prelude> ws
+["U-kirjaimesta","v\228ritet\228\228n","molemmat","huippupisteet","ja","pohjakaari"]
+Prelude> unwords ws
+"U-kirjaimesta v\228ritet\228\228n molemmat huippupisteet ja pohjakaari"
+Prelude> :q
+Leaving GHCi.
+```
+
+Ohjelmakoodi: [readFile.hs](readFile.hs)
+
+# Tapahtumankäsittelyä
+
+Tarkastellaan lähdekoodia: [simple-events.hs](simple-events.hs)
+
+Ohjelma luo tutun ikkunan.
+
+![](simple-events.png)
+
+## Tekstikentän tekstin muutos
+
+Funktiolla `onEditableChanged` tekstikenttä `entry` saa tapahtumankäsittelijän `entryTextChanged`. 
+
+```
+  entry  <- entryNew
+  entrySetHasFrame entry False
+  boxPackStart vbox entry PackNatural 3
+  onEditableChanged entry ( 
+    entryTextChanged entry)
+```
+
+Tapahtumankäsittelijän toiminta on yksinkertainen, se tulostaa tapahtuman nimen, sen POSIX-ajan ja tekstikentän tekstin ruudulle.
+
+```
+entryTextChanged entry = do 
+  txt <- entryGetText entry
+  pt  <- getPOSIXTime
+  putStrLn ("Entry ## " ++ (show pt) ++ ": " ++ txt)
+  return ()
+```
+## Ajastintapahtuma
+
+Ajastin alustetaan funktiolla `timeoutAdd`. Ensimmäinen parametri on tapahtumankäsittelifunktio `timeIsOut`. Toinen parametri on aika millisekunteina.
+
+```
+  timeoutAdd timeIsOut 1000
+```
+
+Myös tämä tapahtumankäsittelijä on toiminnaltaan yksinkertainen, tulostaen tapahtuman nimen ja POSIX-ajan.
+
+```
+timeIsOut = do
+  pt <- getPOSIXTime
+  putStrLn ("Timer ## " ++ show pt)
+  return True
+```
+
+Tyypillinen käyttökerta tulostaa
+
+```
+$ runhaskell simple-events.hs 
+Timer ## 1413918113.807756s
+Entry ## 1413918114.648762s: x
+Timer ## 1413918114.808328s
+Entry ## 1413918115.200725s: xx
+Entry ## 1413918115.662261s: xxx
+Timer ## 1413918115.80882s
+Entry ## 1413918116.278175s: xxxx
+Timer ## 1413918116.810192s
+Entry ## 1413918117.120765s: xxxx 
+Entry ## 1413918117.478783s: xxxx x
+Entry ## 1413918117.682427s: xxxx xx
+Timer ## 1413918117.81128s
+Timer ## 1413918118.812609s
+Timer ## 1413918119.813201s
+$ 
+```
+
+# Tulostaulut
+
+Ohjelman ajatus on, että kirjoitusnopeuden mittaus jaetaan puolen minuutin intervalleihin (jatkossa `i`-etuliite nimissä). Varsinainen tulos on neljän peräkkäisen intervallin merkkimäärien summa, eli kahden minuutin jakso. Tuloksia ylläpitävä tietorakenne on nimeltään `Result` (`r`-etuliite nimissä). Istunnolla (Session, `s`-etuliite) puolestaan tarkoitetaan ajanjaksoa ensimmäisen merkin syöttämisestä ikkunan sulkemiseen, tietorakenne `Timing`.
+
+```
+iDuration = 30
+rDuration = 120
+amountOfIntervals = rDuration `div` iDuration
+
+data Result = Result { 
+  rDate :: String, 
+  rMrks, rRank, rErrs :: Int
+} deriving (Read, Show)
+
+zeroResult = Result {
+  rDate = "0000-00-00 00:00:00", 
+  rMrks = 0, rRank = 0, rErrs = 0 }
+
+data Timing = Timing {
+  sSession :: String, sTotal :: Int, 
+  sSecsLeft :: Int,   sSpeed :: Double
+} deriving Show
+
+zeroTiming = Timing {
+  sSession = "00:00", sTotal = 0,
+  sSecsLeft = iDuration, sSpeed = 0.0 }
+
+data Interval = Interval {
+  iNum, iMrks, iErrs :: Int 
+} deriving Show
+
+zeroInterval = Interval {
+  iNum = -1, iMrks = 0, iErrs = 0 }
+```
+
+Näitä kolmea tietorakennetta kohden on oma tulostaulunsa ohjelman ikkunassa. Tulostauluun luotava alustava malli, sarakkeiden otsikot ja tätä vastaava funktio solun sisällön tulostamiseksi on määritelty seuraavassa:
+
+```
+rInitModel = replicate 3 zeroResult
+rColTitles = ["Päiväys", "Tulos",         "Sija",        "Virheitä" ]
+rColFuncs  = [ rDate,     rSpeed . rMrks,  show . rRank,  rErrorPros]
+
+sInitModel = [zeroTiming]
+sColTitles = ["Istunto", "Yhteensä",     "Jakso",          "Jaksonopeus"]
+sColFuncs  = [ sSession,  show . sTotal,  show . sSecsLeft, f01 . sSpeed]
+
+iInitModel = replicate amountOfIntervals zeroInterval
+iColTitles = ["Alkoi",        "Päättyi",    "Nopeus",       "Virheitä" ]
+iColFuncs  = [ iStarts . iNum, iEnds . iNum, iSpeed . iMrks, iErrorPros]
+```
+
+Käyttöliittymä luodaan tuttuun tapaan funktiossa `createGUI`:
+
+```
+createGUI = do
+  window <- windowNew
+  onDestroy window mainQuit
+
+  outerVBox  <- vBoxNew False 0
+  middleHBox <- hBoxNew False 0
+  innerVBox1 <- vBoxNew False 0
+  innerVBox2 <- vBoxNew False 0
+
+  rModel <- setupView rInitModel rColTitles rColFuncs innerVBox1
+  sModel <- setupView sInitModel sColTitles sColFuncs innerVBox1
+  iModel <- setupView iInitModel iColTitles iColFuncs innerVBox2
+
+  boxPackStart middleHBox innerVBox1 PackNatural 0
+  boxPackStart middleHBox innerVBox2 PackNatural 6
+  boxPackStart outerVBox middleHBox PackNatural 10
+
+  set window [
+    containerBorderWidth := 10,
+    windowTitle := "Hatupist",
+    containerChild := outerVBox ]
+
+  label1 <- labelNew (Just xxx)
+  miscSetAlignment label1 0 0
+  boxPackStart outerVBox label1 PackNatural 0
+
+  label2 <- labelNew (Just xxx)
+  miscSetAlignment label2 0 0
+  boxPackStart outerVBox label2 PackNatural 0
+
+  textview <- textViewNew
+  boxPackStart outerVBox textview PackNatural 3
+  buffer <- textViewGetBuffer textview
+
+  widgetShowAll window
+  
+  return GUI {
+    gBuffer = buffer,
+    gLabel1 = label1,
+    gLabel2 = label2
+  }
+```
+
+Tulostaulujen näkymä luodaan funktiolla `setupView`, joka tässä vaiheessa näyttää seuraavalta:
+
+```
+setupView initModel titles funcs parent = do
+  model <- listStoreNew (initModel)
+  view  <- treeViewNewWithModel model
+  mapM 
+    ( \(title, func) -> newcol view model title func )
+    ( zip titles funcs )
+  set view [ widgetCanFocus := False ]
+  boxPackStart parent view PackNatural 3
+  return model
+  where
+    newcol view model title func = do
+      renderer <- cellRendererTextNew
+      col <- treeViewColumnNew
+      cellLayoutPackStart col renderer True
+      cellLayoutSetAttributes col renderer model (
+        \row -> [ cellText := func row])
+      treeViewColumnSetTitle col title
+      treeViewAppendColumn view col
+```
+
+Solutekstien muotoilemiseen on erinäinen määrä apufunktioita, joiden toimintalogiikkaan ei tässä vaiheessa kannattane kiinnittää suurempaa huomiota:
+
+```
+rErrorPros rR = 
+  f02p (errorPros (rErrs rR) (rMrks rR))
+
+iErrorPros iV = 
+  f02p (errorPros (iErrs iV) (iMrks iV))
+
+errorPros errs mrks 
+  | errs == 0 && mrks == 0 = 0.0
+  | errs /= 0 && mrks == 0 = 100.0
+  | otherwise = 100.0 * (intToDouble errs) / (intToDouble mrks)
+
+f01 :: Double -> String
+f01 = printf "%.1f"
+
+f02p :: Double -> String
+f02p = printf "%.2f%%"
+
+iSpeed mrks = 
+  f01 ((intToDouble mrks)* 60.0 / intToDouble iDuration)
+
+rSpeed mrks = 
+  f01 ((intToDouble mrks)* 60.0 / intToDouble rDuration)
+
+iStarts n
+  | n <= 0    = "00:00"
+  | otherwise = mmss (fromIntegral (n*iDuration) :: Double)
+
+iEnds n = iStarts (n+1)
+
+mmss seconds =
+  leadingZero (show (floor seconds `div` 60)) ++ 
+  ":" ++ 
+  leadingZero (show (floor seconds `mod` 60))
+
+leadingZero s
+  | length s < 2 = "0" ++ s
+  | otherwise    = s
+
+intToDouble :: Int -> Double
+intToDouble i = fromRational (toRational i)
+```
+
+Ohjelman tuottama ikkuna näyttää nyt tältä:
+
+![](Hatupist_011.png)
+
+# Ohjelman tila
+
+Ohjelma on kulloinkin yhdessä seuraavista tilosta:
+
+```
+data GameStatus = Error | Correct | Back | NotStarted
+  deriving (Eq, Show)
+```
+
+`NotStarted`: Ohjelman käynnistyessä, kun yhtään merkkiä ei ole syötetty. Tilarivillä näytetään teksti "Voit aloittaa". Tulostaulut näyttävät nollaa, eikä ajastinta ole käynnistetty.
+
+`Correct`: Käyttäjä on kirjoittanut tekstiä, ja teksti on oikein. Näppäimistönpainallukset rekisteröidään.
+
+`Error`: Käyttäjä on lyönyt virhelyönnin. Virhe rekisteröidään ja käyttäjää pyydetään korjaamaan virheet. Ohjelma on tässä tilassa siihen saakka kunnes teksti on jälleen oikein, jolloin siirrytään takaisin tilaan `Correct`. 
+
+`Back`: Teksti on oikein, mutta käyttäjä (jostain syystä) poistaa merkkejä. Näppäimistönpainalluksista ei tällöin synny rekisteröitävää tietoa.
+
+Tila määräytyy tapahtumankäsittelijässä `whenEntryChanged`. Samalla vanha tila otetaan talteen. Vanha tila `oldStatus` saa arvon nykyiseltä tilalta `status`.
+
+```
+whenEntryChanged gsRef = do
+  pt  <- getPOSIXTime
+  gs  <- readIORef gsRef
+  txt <- entryGetText (gEntry (g gs))
+  let label1Str = head (oLabelStrs gs)
+      status = getStatus txt label1Str (oldlen gs)
+      f = case (status,oldStatus gs) of
+        (_,NotStarted)  -> whenNotStarted status
+        (Correct,_)     -> whenCorrect txt
+        (Error,Correct) -> whenNewError
+        otherwise       -> whenOther status (oldStatus gs)
+      cprfix = length (commonPrefix txt label1Str)
+  newGs <- f pt gsRef gs
+  set (gLabel1 (g gs)) [ 
+    labelLabel := blankStart cprfix label1Str]
+  writeIORef gsRef newGs {
+    oldStatus = status,
+    oldlen = max cprfix (oldlen gs),
+    nextLetter = nextChar cprfix label1Str
+  }
+  drawStatusText gsRef
+  widgetQueueDraw (gErrorCanvas  (g gs))
+  widgetQueueDraw (gHelperCanvas (g gs))
+  when (label1Str == txt) (advanceLine gsRef newGs)
+  return ()
+
+whenNotStarted status gui settings lines gsRef gs = do
+  putStrLn ("Started with " ++ (show status))
+  return ()
+
+whenCorrect gui settings lines gsRef gs = do
+  print "Correct."
+  return ()
+
+whenNewError gui settings lines gsRef gs = do
+  print "New Error."
+  return ()
+
+whenOther status oldStatus gui settings lines gsRef gs = do
+  putStrLn ("Other with " ++ (show (status,oldStatus)))
+  return ()
+```
+
+Tyypillinen tuloste kokeiltaessa edellistä näyttää tältä:
+
+```
+(Correct,NotStarted,"M")
+Started with Correct
+(Correct,Correct,"Mo")
+"Correct."
+(Error,Correct,"Mou")
+"New Error."
+(Back,Error,"Mo")
+Other with (Back,Error)
+(Correct,Back,"Mor")
+"Correct."
+(Back,Correct,"Mo")
+Other with (Back,Correct)
+```
+
+# Rivinvaihto
+
+Jotta komponenttien välittäminen funktion parametreina onnistuisi helpommin, keräämme välitettävät komponentit yhteen tietorakenteeseen.
+
+```
+data GUI = GUI {
+  gEntry :: Entry,
+  gLabel1, gLabel2 :: Label
+}
+```
+Asetukset ovat tietorakenteessa `Settings`, niitä ei tässä vaiheessa ole montaa.
+
+```
+data Settings = Settings {
+  lineLen :: Int, startLine :: Int,
+  textfile :: String
+} deriving (Read, Show)
+```
+Asetukset saavat oletusarvonsa funktiossa `defaultSettings`.
+
+```
+defaultSettings = Settings {
+  lineLen = 40, startLine = 0,
+  textfile = "morse.txt"
+}
+```
+
+Näkyvissä olevat tekstirivit saadaan yksinkertaisella funktiolla `labelStrings`, joka palauttaa kahden rivin taulukon.
+
+```
+labelStrings :: Int -> [String] -> [String]
+labelStrings startline lines =
+  [lines !! first] ++ [lines !! second]
+  where
+    first = startline `mod` (length lines)
+    second = (startline + 1) `mod` (length lines)
+```
+Kun tekstikentän sisältö muuttuu, tarkistetaan se tapahtumankäsittelijässä `whenEntryChanged` ja sen saavuttaessa saman arvon kuin kirjoitettavana oleva tekstirivi, vaihdetaan se uuteen funktiolla `advanceLine`.
+
+```
+whenEntryChanged gui lines gsRef = do
+  gs  <- readIORef gsRef
+  txt <- entryGetText (gEntry gui)
+  let label1Str = head (oLabelStrs gs)
+  when (label1Str == txt) (advanceLine gui lines gsRef gs)
+  return ()
+```
+
+Funktio advanceLine lisää tilamuuttujassa olevan nykyisen rivinumeron `currentLine` arvoa yhdellä. Kun tiedostossa ei ole enää uusia rivejä kirjoitettavaksi, aloitetaan uudelleen alusta. Tämä tapahtuu pitämällä rivinumero annetuissa rajoissa jakojäännösfunktion `mod` avulla.
+
+```
+advanceLine gui lines gsRef gs = do
+  writeIORef gsRef gs {
+    currentLine = ncline
+  }
+  renewLabels gui ncline lines gsRef
+  return ()
+  where
+    ncline = ((currentLine gs) + 1) `mod` (length lines)
+```
+Ohjelman tulostama ikkuna:
+
+![](linefeed.png)
+
+Lähdekoodi [linefeed.hs](linefeed.hs)
+
+# Ajanottoa
+
+Intervallit eli kolmenkymmenen sekunnin jaksot on siis määritelty tietorakenteessa `Interval`, ja alustamaton oletusintervalli on nimeltään `zeroInterval`, sen tuntee numerosta -1. Lyöntimäärät ja virheet lasketaan kenttiin `iMrks` ja `iErrs`.
+
+```
+data Interval = Interval {
+  iNum, iMrks, iErrs :: Int 
+} deriving Show
+
+zeroInterval = Interval {
+  iNum = -1, iMrks = 0, iErrs = 0 }
+```
+
+Tietorakenteeseen `State` lisätään aloitusaikaa kuvaava kenttä `startTime`, joka alustetaan epämääräiseen nolla-aikaan vuoteen 1970.
+
+```
+data State = State {
+  status :: GameStatus,
+  startTime :: POSIXTime,
+  ...
+
+initState = State {
+  startTime = fromIntegral 0 :: POSIXTime,
+  oldStatus = NotStarted,
+  ...
+```
+
+Kun lyönnin aika `t` sekunteina tunnetaan, saadaan intervallin numero, johon lyönti kuuluu, yksinkertaisella funktiolla:
+
+```
+intervalNumber t =
+  floor t `div` iDuration
+```
+
+`POSIXtime`-tyyppi (ja jatkossa lyhenne `pt`) on kellonaika alkaen vuodesta 1970 sekunteina, joten se käy sekuntimäärien vertailemiseen yksinkertaisella tyyppimuunnoksella:
+
+```
+secondsFrom startPt endPt =
+  a - b
+  where
+    a = ptToDouble endPt
+    b = ptToDouble startPt
+
+ptToDouble :: POSIXTime -> Double
+ptToDouble t  = fromRational (toRational t)
+intToDouble :: Int -> Double
+intToDouble i = fromRational (toRational i)
+```
+
+Tässä funktiot `fromRational` ja `toRational` ovat esimerkkejä tyyppiluokkien mukaan kuormitetuista funktioista, eli ne tekevät muunnoksen annettujen tyyppimäärittelyjen mukaisesti.
+
+Puskurin muutoksiin vastaava koodi on nyt seuraavassa muodossa:
+
+```
+whenEntryChanged gui settings lines gsRef = do
+  pt  <- getPOSIXTime
+  gs  <- readIORef gsRef
+  txt <- entryGetText (gEntry gui)
+  let label1Str = head (oLabelStrs gs)
+      status = getStatus txt label1Str (oldlen gs)
+      f = case (status,oldStatus gs) of
+        (_,NotStarted)  -> whenNotStarted status
+        (Correct,_)     -> whenCorrect
+        (Error,Correct) -> whenNewError
+        otherwise       -> whenOther status (oldStatus gs)
+  newgs <- f gui settings pt gs
+  writeIORef gsRef newgs {
+    oldStatus = status,
+    oldlen = max (length (commonPrefix txt label1Str)) (oldlen gs)
+  }
+  when (label1Str == txt) (advanceLine gui lines gsRef gs)
+  return ()
+
+whenNotStarted status gui settings pt gs = do
+  putStrLn ("Started with " ++ (show status))
+  return gs { 
+    startTime = pt 
+  }
+
+whenCorrect gui settings pt gs = do
+  print "Correct."
+  let s = secondsFrom (startTime gs) pt
+      i = intervalNumber s
+  print (s,i)
+  return gs
+
+whenNewError gui settings pt gs = do
+  print "New Error."
+  return gs
+
+whenOther status oldStatus gui settings pt gs = do
+  putStrLn ("Other with " ++ (show (status,oldStatus)))
+  return gs
+```
+
+Nyt naksuteltaessa noin yhden merkin viidessä sekunnissa, saatiin seuraava tuloste, josta näkyy kulunut sekuntimäärä ja intervalli, johon näppäimistönpainallus kuuluu:
+
+```
+$ runhaskell timing.hs 
+Started with Correct
+"Correct."
+(3.952288866043091,0)
+"Correct."
+(9.909076929092407,0)
+"Correct."
+(15.482538938522339,0)
+"Correct."
+(20.866790771484375,0)
+"Correct."
+(26.18815588951111,0)
+"Correct."
+(31.308336973190308,1)
+"Correct."
+(36.21953082084656,1)
+```
+
+Ohjelmakoodi [timing.hs](timing.hs)
+
+Ensi kerralla käytämme tätä hyväksi, ja keräämme nämä tiedot niitä vastaaviin tietorakenteisiin.
+
+# Ajanotosta tulostauluihin
+
+Jotta tulostaulujen sisältöä päästään muuttamaan, tarvitaan siis viitteet näiden taulujen malleihin:
+
+```
+data GUI = GUI {
+  gEntry :: Entry,
+  gLabel1, gLabel2 :: Label,
+  gModelR :: ListStore Result,
+  gModelS :: ListStore Timing,
+  gModelI :: ListStore Interval
+}
+```
+
+Nämä viitteet luotiin funktiossa `createGUI`:
+
+```
+  rModel <- setupView rInitModel rColTitles rColFuncs innerVBox1
+  sModel <- setupView sInitModel sColTitles sColFuncs innerVBox1
+  iModel <- setupView iInitModel iColTitles iColFuncs innerVBox2
+  ...
+  return GUI {
+    gEntry = entry,
+    gLabel1 = label1, gLabel2 = label2,
+    gModelR = rModel, gModelS = sModel, gModelI = iModel
+  }
+```
+
+S-taulun ainoa rivi (rivinumero 0) päivitetään nyt funktiolla `listStoreSetValue`. Sen parametrit ovat viite malliin (`gModelS gui`), rivinumero ja tietorakenne `Timing`, joka sisältää näytettävien kenttien saamat arvot.
+
+```
+renewTableS gui gs t = do
+  listStoreSetValue (gModelS gui) 0 Timing {
+    sSecsLeft = iLeft t,
+    sSession = mmss t,
+    sTotal = total gs,
+    sSpeed = 0.0
+  }
+```
+
+Ensimmäisen näppäimistönpainalluksen seurauksena kutsuttavaan funktioon `whenNotStarted` on lisätty komento `timeoutAdd`, joka käynnistää ajastimen.
+
+```
+whenNotStarted status gui settings lines pt gsRef gs = do
+  putStrLn ("Started with " ++ (show status))
+  timeoutAdd (onTimeout gui gsRef) 500
+```
+
+Ajastimen toiminta määritellään seuraavassa:
+
+```
+onTimeout gui gsRef = do
+  gs <- readIORef gsRef
+  pt <- getPOSIXTime
+  let t = secondsFrom (startTime gs) pt
+      iCur = iNumber t
+  renewTables gui gs t iCur
+  writeIORef gsRef gs {
+    lastShownIv = iCur
+  }
+  return True
+```
+
+Pienet apufunktiot `iNumber` ja `iLeft` kertovat jakson numeron ja paljonko jaksossa on sekunteja jäljellä.
+
+```
+iNumber t =
+  floor t `div` iDuration
+
+iLeft t =
+  iDuration - (floor t `mod` iDuration)
+```
+
+Tilastoitavat näppäimistönpainallukset kerätään oikeisiin intervalleihin funktiossa `addTime`: 
+
+```
+addTime status i intervals =
+  [newHead] ++ tail newIvs
+  where
+  newHead = case status of
+    Correct -> headIv { iMrks = (iMrks headIv) + 1 }
+    Error   -> headIv { iErrs = (iErrs headIv) + 1 }
+  headIv = head newIvs
+  newIvs = if i /= latestIvNum intervals
+    then [zeroInterval { iNum = i }] ++ intervals
+    else intervals
+```
+
+Käytännössä nämä muodostavat kasvavan taulukon, jossa kenttä `iNum` kertoo jakson numeron, ja kentät `iMrks` ja `iErrs` lyöntimäärät ja virheet seuraavaan tapaan:
+
+```
+[Interval {iNum = 1, iMrks = 9, iErrs = 0},Interval {iNum = 0, iMrks = 68, iErrs = 2}]
+```
+![](timing-02.png)
+
+Jatkamme tulostietojen käsittelemistä ensi kerralla. Ohjelmakoodi tähän mennessä [timing-02.hs](timing-02.hs)
+
+# Tulostaulut R, S ja I
+
+![](result-tables-02.png)
+
+Tulostauluja on siis kolme, näistä istunnon S-taulu päivitetään puolen sekunnin välein. Kaksi muuta taulua päivitetään, kun siirrytään intervallista toiseen. Monadin sisällä tämä ehtolause ei ole kovin selkeästi luettava, mutta se on seuraavassa:
+
+```
+renewTables gui gs t iCur = do
+  renewTableS gui gs t 
+  newGs <- if (lastShownIv gs /= iCur)
+  then renewSeldomTables gui gs iCur
+  else return gs
+  return newGs
+```
+
+Intervallien I-taulun päivityksen yhteydessä lasketaan kahden minuutin tulos ja siivotaan pois tarpeettomat intervallit:
+
+```
+renewTableI gui gs iCur = do
+  mapM 
+    (\(a,b) -> listStoreSetValue (gModelI gui) (amountOfIntervals-a) b) 
+    (zip [1..] showIvs)
+  return gs {
+    intervals = newIvs,
+    lastShownIv = iCur,
+    results = [zeroResult {
+       rMrks = sum [iMrks g | g <- showIvs]
+    }]
+  }
+  where
+    iMaxShow = iCur - 1
+    infimum = iMaxShow - amountOfIntervals + 1
+    iMinShow = max 0 infimum
+    iMinNeed = max 0 (infimum + 1)
+    newIvs = ivsFrom iMinNeed (intervals gs)
+    showIvs = reverse (ivsAllBetween iMinShow iMaxShow (intervals gs))
+```
+
+Näytettävien intervallien alaraja on muuttuja `iMinShow` ja yläraja `iMaxShow`. Seuraavaan kertaan näistä ei tarvitse säilyttää alarajan intervallia, joten tarvittavien intervallien alaraja `iMinNeed` on yhden korkeampi. Uudet intervallit ovat nyt siis taulukossa `newIvs` ja näytettävät intervallit taulukossa `showIvs`. Kahden minuutin tulos saadaan laskemalla merkkimäärät näytettävistä intervalleista kaavalla
+
+```
+rMrks = sum [iMrks g | g <- showIvs]
+```
+
+Tässä vaiheessa heitämme tuon laskun tuloksen yksinkertaisesti tulosten R-taulun alimmalle riville:
+
+```
+latestResult results = if null results 
+  then zeroResult
+  else head results
+
+renewTableR gui gs iCur = do
+  listStoreSetValue (gModelR gui) 2 (latestResult (results gs))
+  return ()
+```
+
+Pienet apufunktiot, joita käytämme intervallien suodattamiseen, ovat esitettynä seuraavassa. Intervalleihin ei taltioidu nollatuloksia, mutta I-taulussa ne halutaan näyttää, ja tästä syystä määrittelemme funktiot `ivsAllBetween` ja `ivExactly`.
+
+```
+ivsBetween iMin iMax ivs =
+  filter (\iv -> iMin <= (iNum iv) && (iNum iv) <= iMax) ivs
+
+ivsFrom iMin ivs =
+  filter (\iv -> iMin <= (iNum iv)) ivs
+
+ivsAllBetween iMin iMax ivs =
+  [ivExactly n ivs | n <- [iMin .. iMax]]
+
+ivExactly n ivs =
+  case find (\iv -> n == (iNum iv)) ivs of
+    Just x  -> x
+    Nothing -> zeroInterval { iNum = n }
+```
+
+Kirjoitusnopeus kauniissa muodossa merkkijonona esitettynä saatiin jakamalla merkkimäärä aikavälin pituudella (mrk/min, jossa 1min=60.0s).
+
+```
+rSpeed mrks = 
+  f01 ((intToDouble mrks)* 60.0 / intToDouble rDuration)
+```
+
+Funktiota `addTime` on myös hieman muutettu. Se sisältää nyt tarkistuksen tyhjän taulukon varalta.
+
+```
+addTime status i intervals =
+  [newHead] ++ tail newIvs
+  where
+  newHead = case status of
+    Correct -> headIv { iMrks = (iMrks headIv) + 1 }
+    Error   -> headIv { iErrs = (iErrs headIv) + 1 }
+  headIv = head newIvs
+  newIvs = if null intervals || i /= latestIvNum intervals
+    then [zeroInterval { iNum = i }] ++ intervals
+    else intervals
+```
+
+Ohjelmakoodi: [result-tables-02.hs](result-tables-02.hs)
+
