@@ -1,7 +1,7 @@
 fileprefix="book.fi" 
 echo "<meta charset=\"utf-8\">" >$fileprefix.html
 
-cat plain-ui.fi.md readFile.fi.md simple-events.fi.md result-tables.fi.md gamestatus.fi.md linefeed.fi.md timing.fi.md timing-02.fi.md result-tables-02.fi.md > book.fi.md
+cat plain-ui.fi.md readFile.fi.md simple-events.fi.md result-tables.fi.md gamestatus.fi.md linefeed.fi.md timing.fi.md timing-02.fi.md result-tables-02.fi.md result-tables-03.fi.md > book.fi.md
 
 
 markdown $fileprefix.md >>$fileprefix.html
