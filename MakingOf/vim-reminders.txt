@@ -13,5 +13,9 @@ Use the following mapping to format the current paragraph:
 
 :nnoremap Q gqip
 
+Change [b] and [\b] to backstick
+:%s/\[\(\/\)\=b\]/`/g 
 
+Change [code] and [\code] to triple backstick
+:%s/\[\(\/\)\=code\]/```/g
 
