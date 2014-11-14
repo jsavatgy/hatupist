@@ -41,7 +41,7 @@ Voimme nyt kutsua tietorakenteen `State` sisältämiä kenttiä seuraavaan tapaa
 textfile (s gs)
 lineLen (s gs)
 gModelR (g gs)
-gBuffer (g gs)
+gEntry (g gs)
 ...
 ```
 
