@@ -1,6 +1,8 @@
-Hatupist. Kirjoitusnopeuden harjoitusohjelma. Käymme tässä lävitse kuinka ohjelma laaditaan pala palalta alkaen nollasta.
+# Hatupist
 
-# Tyhjä ikkuna.
+Hatupist on kirjoitusnopeuden harjoitusohjelma. Rakennamme ohjelman alkaen tyhjästä ikkunasta. Käytämme Haskell-ohjelmointikieltä ja Gtk2hs-käyttöliittymäkirjastoa.
+
+# Tyhjä ikkuna
 
 Seuraava ohjelma avaa yksinkertaisen tyhjän ikkunan:
 
@@ -21,7 +23,7 @@ Tallenna ohjelma nimellä `plain-ui.hs` ja anna pääteikkunaan komento `runhask
 
 ![](plain-ui.png)
 
-# Yksinkertainen käyttöliittymä.
+# Yksinkertainen käyttöliittymä
 
 Katsotaan seuraavaksi tiedostoa [plain-ui-002.hs](plain-ui-002.hs)
 
