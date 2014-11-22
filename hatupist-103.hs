@@ -47,7 +47,7 @@ data Interval = Interval {
 zeroInterval = Interval {
   iNum = -1, iMrks = 0, iErrs = 0 }
 
-data GUI = None | GUI {
+data GUI = NotCreated | GUI {
   gWindow :: Window,
   gErrorCanvas, gTimingCanvas, gHelperCanvas :: DrawingArea,
   gEntry :: Entry,
@@ -97,7 +97,7 @@ initState = State {
   results = [],
   sessionBest = zeroResult,
   settings = defaultSettings,
-  gui = None
+  gui = NotCreated
 }
 
 data Settings = Settings {
