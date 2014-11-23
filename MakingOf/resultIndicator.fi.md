@@ -1,6 +1,6 @@
-# Tuloksen mittausindikaattori
+# Tulosilmaisimen väriteema
 
-Tulos mitataan puolen minuutin välein. Lisäämme ohjelmaan pienen indikaattorin osoittamaan mittaushetken. Indikaattorin väri ilmaisee kuinka korkealle tuloksissa mitattu tulos sijoittuu.
+Tulos mitataan puolen minuutin välein. Lisäämme ohjelmaan pienen ilmaisimen osoittamaan mittaushetken. Ilmaisimen väri ilmaisee kuinka korkealle tuloksissa mitattu tulos sijoittuu.
 
 Kokeilemme väriteemaa erillisessä ohjelmassa, jonka laadimme seuraavaksi. 
 
@@ -80,4 +80,91 @@ drawBox y rankD = do
 ```
 
 Ohjelman lähdekoodi: [resultColorTheme.hs](resultColorTheme.hs)
+
+# Tulosilmaisin pääohjelmassa
+
+Luomme tulosilmaisimen piirtoalueen `timingCanvas` muiden graafisten komponenttien yhteydessä funktiossa `createGUI`. Tulosilmaisin on 300x3 pikselin kokoinen, kapea leveä yksivärinen raita, joka näytetään lyhyen hetken ajan aina puolen minuutin välein.
+
+```
+  timingCanvas <- drawingAreaNew
+  widgetSetSizeRequest timingCanvas 300 3
+  onExpose timingCanvas (
+    drawTimingCanvas gsRef timingCanvas)
+  boxPackStart innerVBox1 timingCanvas PackNatural 0
+```
+
+Aktivoimme tulosilmaisimen piirron harvoin päivitettävien taulujen uudelleenpiirron yhteydessä.
+
+```
+renewSeldomTables gs iCur = do
+  (newGs, shownRs) <- renewTableI gs iCur
+  renewTableR newGs shownRs
+  widgetQueueDraw (gTimingCanvas (g gs))
+  return newGs { showTimingPict = True }
+```
+
+Tarvitsemme pääohjelman tilassa tiedon tulosilmaisimen näkyvyydestä. Kenttä `showTimingPict` on tyyppiä `Bool`, ja saa oletuksena arvon `False`.
+
+Ilmaisimen piirron olemme jo käyneet suurelta osin lävitse. Ilmaisin piirretään jos kenttä `showTimingPict` on saanut arvon `True`, muutoin sitä ei piirretä. Funktio `drawEmptyPicture` on sama kuin virhekuviota piirrettäessä, ainoastaan parametri `canvas` osoittaa tulosilmaisimen piirtoalueelle eikä virhekuvion piirtoalueelle.
+
+```
+drawTimingCanvas gsRef canvas _evt = do
+  gs <- readIORef gsRef
+  if (showTimingPict gs)
+    then drawTimingPicture gs canvas
+    else drawEmptyPicture canvas
+  writeIORef gsRef gs { showTimingPict = False }
+  return True
+
+hueLimits  = (0.00, 1.00)
+valLimits  = (1.00, 0.25)
+limitsFrom = (0.00, 12.3)
+
+ptAlong limitsTo limitsFrom pointFrom =
+  to0 + distTo*((ptFrom - from0)/distFrom)
+  where
+    (to0,to1) = limitsTo
+    distTo = to1 - to0
+    (from0,from1) = limitsFrom
+    distFrom = from1 - from0
+    ptFrom = from0 `max` pointFrom `min` from1
+
+drawTimingRect w h (r,g,b) = do
+  rectangle 0 0 w h
+  setSourceRGB r g b
+  fill
+
+drawTimingPicture gs canvas = do
+  row <- listStoreGetValue (gModelR (g gs)) 2
+  (wInt,hInt) <- widgetGetSize canvas 
+  drawWin <- widgetGetDrawWindow canvas
+  let (w,h) = (intToDouble wInt, intToDouble hInt)
+      rankD = intToDouble (rRank row)
+      colorPoint = logBase 2.0 rankD
+      sat = 0.40
+      hue = ptAlong hueLimits limitsFrom colorPoint
+      val = ptAlong valLimits limitsFrom colorPoint
+      (r,g,b) = hsvToRgb (hue,sat,val)
+  renderWithDrawable drawWin (drawTimingRect w h (r,g,b))
+  timeoutAdd (onTimeToClear canvas) 1000
+  return True
+```
+
+Tulosilmaisimen piirto käynnistää ajastimen, joka laukeaa sekunnin kuluttua piirtämisestä.
+
+```
+  timeoutAdd (onTimeToClear canvas) 1000
+```
+
+Tällöin kutsutaan funktiota `onTimeToClear`.
+
+```
+onTimeToClear canvas = do
+  widgetQueueDraw (canvas)
+  return False
+```
+
+## FIXME: KUVA! ###############
+
+Ohjelmakoodi kokonaisuudessaan: [timingCanvas.hs](timingCanvas.hs)
 

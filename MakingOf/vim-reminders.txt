@@ -1,4 +1,7 @@
 
+:set statusline=%<%f\ %{getfsize(expand('%%:p'))}\ %h%r%=%-14.(%l,%c%V%)\ %P
+
+history | grep kirjoita
 history | gvim -
 setxkbmap fi -print | xkbcomp - - | xkbprint - - -nokc -lc en_US | ps2pdf - > qwerty.pdf
 

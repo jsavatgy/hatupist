@@ -1,6 +1,6 @@
 # Tilarivi
 
-Lisätään graafisen käyttöliittymän tietotyyppiin kenttä `gStatusbar`, joka on tyyppiä `Label`.
+Lisäämme graafisen käyttöliittymän tietotyyppiin kentän `gStatusbar`, joka on tyyppiä `Label`.
 
 ```
 data GUI = NotCreated | GUI {
@@ -15,7 +15,7 @@ data GUI = NotCreated | GUI {
 }
 ```
 
-Luodaan tätä vastaava komponentti funktiossa `CreateGUI`. Haluamme muuttaa tilarivin taustaväriä. Tyypin `Label` komponentti ei huolehdi itse taustaväristä, joten upotamme komponentin tapahtumalaatikkoon `eventbox`.
+Luomme tätä vastaavan komponentin funktiossa `CreateGUI`. Haluamme muuttaa tilarivin taustaväriä. Tyypin `Label` komponentti ei huolehdi itse taustaväristä, joten upotamme komponentin tapahtumalaatikkoon `eventbox`.
 
 ```
   statusbar <- labelNew Nothing
