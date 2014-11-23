@@ -150,12 +150,12 @@ getStartupConfig gsRef = do
   -- settings
   let rname = dir ++ "/" ++ settingsFile
   oldSettings <- settingsFromFile rname
-  putStrLn ("Reading " ++ rname)
-  putStrLn (show (oldSettings))
+  --putStrLn ("Reading " ++ rname)
+  --putStrLn (show (oldSettings))
   -- results
   let rname = dir ++ "/" ++ resultsFile
   oldResults <- resultsFromFile rname
-  putStrLn ("Reading " ++ rname ++ ": " ++ show (length (oldResults)) ++ " rows")
+  --putStrLn ("Reading " ++ rname ++ ": " ++ show (length (oldResults)) ++ " rows")
   listStoreSetValue (gModelR (g gs)) 0 (bestResult oldResults)
   -- other
   writeIORef gsRef gs {
@@ -177,16 +177,16 @@ getLines gsRef = do
   renewLabels gsRef
 
 quitProgram gsRef = do
-  print "Quitting."
+  --print "Quitting."
   gs <- readIORef gsRef
   -- results
   let rname = (homeDirectory gs) ++ "/" ++ resultsFile
   writeFile rname (show (r gs))
-  putStrLn ("Writing " ++ rname)
+  --putStrLn ("Writing " ++ rname)
   -- settings
   let rname = (homeDirectory gs) ++ "/" ++ settingsFile
   writeFile rname (show (s gs))
-  putStrLn ("Writing " ++ rname)
+  --putStrLn ("Writing " ++ rname)
   mainQuit
 
 main = do
@@ -810,7 +810,7 @@ whenEntryChanged gsRef = do
   return ()
 
 whenNotStarted status pt gsRef gs = do
-  putStrLn ("Started with " ++ (show status))
+  --putStrLn ("Started with " ++ (show status))
   timeoutAdd (onTimeout gsRef) tableRRefreshMs
   return gs { 
     total = if status == Correct then 1 else 0,
@@ -822,7 +822,7 @@ whenNotStarted status pt gsRef gs = do
   }
 
 whenCorrect txt pt gsRef gs = do
-  print "Correct."
+  --print "Correct."
   return gs {
     total = (total gs) + 1,
     intervals = addTime
@@ -832,7 +832,7 @@ whenCorrect txt pt gsRef gs = do
   }
 
 whenNewError pt gsRef gs = do
-  print "New Error."
+  --print "New Error."
   return gs {
     intervals = addTime
       Error 
@@ -841,7 +841,7 @@ whenNewError pt gsRef gs = do
   }
 
 whenOther status oldStatus pt gsRef gs = do
-  putStrLn ("Other with " ++ (show (status,oldStatus)))
+  --putStrLn ("Other with " ++ (show (status,oldStatus)))
   return gs
 
 latestIvNum ivs = if null ivs then -1 else iNum (head ivs)
