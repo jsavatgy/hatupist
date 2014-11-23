@@ -1,5 +1,9 @@
 
 :set statusline=%<%f\ %{getfsize(expand('%%:p'))}\ %h%r%=%-14.(%l,%c%V%)\ %P
+"set nocompatible
+set noruler
+"set statusline=%t
+set laststatus=2
 
 history | grep kirjoita
 history | gvim -
