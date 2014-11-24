@@ -257,7 +257,7 @@ createGUI gsRef = do
   iModel <- setupView iInitModel iColTitles iColFuncs innerVBox2
 
   timingCanvas <- drawingAreaNew
-  widgetSetSizeRequest timingCanvas 300 3
+  widgetSetSizeRequest timingCanvas 120 3
   onExpose timingCanvas (
     drawTimingCanvas gsRef timingCanvas)
   boxPackStart innerVBox1 timingCanvas PackNatural 0

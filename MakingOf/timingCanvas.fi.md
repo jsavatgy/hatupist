@@ -83,11 +83,11 @@ Ohjelman lähdekoodi: [resultColorTheme.hs](resultColorTheme.hs)
 
 # Tulosilmaisin pääohjelmassa
 
-Luomme tulosilmaisimen piirtoalueen `timingCanvas` muiden graafisten komponenttien yhteydessä funktiossa `createGUI`. Tulosilmaisin on 300x3 pikselin kokoinen, kapea leveä yksivärinen raita, joka näytetään lyhyen hetken ajan aina puolen minuutin välein.
+Luomme tulosilmaisimen piirtoalueen `timingCanvas` muiden graafisten komponenttien yhteydessä funktiossa `createGUI`. Tulosilmaisin on 3 pikselin korkuinen, kapea leveä yksivärinen raita, joka näytetään lyhyen hetken ajan aina puolen minuutin välein. Sen leveys skaalautuu riippuen yläpuolella olevien taulukoiden leveydestä, ollen kuitenkin vähintään 120 pikseliä.
 
 ```
   timingCanvas <- drawingAreaNew
-  widgetSetSizeRequest timingCanvas 300 3
+  widgetSetSizeRequest timingCanvas 120 3
   onExpose timingCanvas (
     drawTimingCanvas gsRef timingCanvas)
   boxPackStart innerVBox1 timingCanvas PackNatural 0

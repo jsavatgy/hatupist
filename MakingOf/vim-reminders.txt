@@ -1,9 +1,12 @@
 
-:set statusline=%<%f\ %{getfsize(expand('%%:p'))}\ %h%r%=%-14.(%l,%c%V%)\ %P
-"set nocompatible
+colorscheme peachpuff
+set statusline=%<%f\ %{getfsize(expand('%%:p'))}\ %{\ line2byte(line(\"$\")+1)-1\ }\ %h%r%=%-14.(%l,%c%V%)\ %P
 set noruler
-"set statusline=%t
 set laststatus=2
+au VimEnter * hi StatusLine guibg=White guifg=Green gui=bold
+au InsertEnter * hi StatusLine guibg=White guifg=Orange gui=bold
+au InsertLeave * hi StatusLine guibg=White guifg=Green gui=bold
+" peachpuff guibg=#ffdab9 
 
 history | grep kirjoita
 history | gvim -
