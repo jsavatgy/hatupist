@@ -1,4 +1,4 @@
-# Virhekuvio
+# Virheraidoitus
 
 Lisätään piirtoalue `gErrorCanvas` tyyppiä `DrawingArea` virheestä ilmoittavaa piirrosta varten graafisen käyttöliittymän tietotyyppiin kentäksi.
 

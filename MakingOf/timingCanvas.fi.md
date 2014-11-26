@@ -1,6 +1,8 @@
-# Tulosilmaisimen väriteema
+# Ajastimen väripalkki
 
-Tulos mitataan puolen minuutin välein. Lisäämme ohjelmaan pienen ilmaisimen osoittamaan mittaushetken. Ilmaisimen väri ilmaisee kuinka korkealle tuloksissa mitattu tulos sijoittuu.
+Tulos mitataan puolen minuutin välein. Lisäämme ohjelmaan kapean väripalkin osoittamaan mittaushetken. Palkin väri ilmaisee kuinka korkealle tuloksissa mitattu tulos sijoittuu.
+
+## Väriteema
 
 Kokeilemme väriteemaa erillisessä ohjelmassa, jonka laadimme seuraavaksi. 
 
@@ -61,6 +63,7 @@ drawCanvas2 canvas _evt = do
     [(y, 2.0**y) | y <- [0.00..12.00]]
   return True
 ```
+
 Yksittäinen laatikko piirretään Cairon piirtotoimenpiteiden avulla funktiossa `drawBox`.
 
 ```
@@ -81,7 +84,7 @@ drawBox y rankD = do
 
 Ohjelman lähdekoodi: [resultColorTheme.hs](resultColorTheme.hs)
 
-# Tulosilmaisin pääohjelmassa
+## Väripalkki pääohjelmassa
 
 Luomme tulosilmaisimen piirtoalueen `timingCanvas` muiden graafisten komponenttien yhteydessä funktiossa `createGUI`. Tulosilmaisin on 3 pikselin korkuinen, kapea leveä yksivärinen raita, joka näytetään lyhyen hetken ajan aina puolen minuutin välein. Sen leveys skaalautuu riippuen yläpuolella olevien taulukoiden leveydestä, ollen kuitenkin vähintään 120 pikseliä.
 
