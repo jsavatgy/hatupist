@@ -1,16 +1,6 @@
-
-colorscheme peachpuff
-set statusline=%<%f\ %{getfsize(expand('%%:p'))}\ %{\ line2byte(line(\"$\")+1)-1\ }\ %h%r%=%-14.(%l,%c%V%)\ %P
-set noruler
-set laststatus=2
-au VimEnter * hi StatusLine guibg=White guifg=Green gui=bold
-au InsertEnter * hi StatusLine guibg=White guifg=Orange gui=bold
-au InsertLeave * hi StatusLine guibg=White guifg=Green gui=bold
-" peachpuff guibg=#ffdab9 
-
-history | grep kirjoita
-history | gvim -
-setxkbmap fi -print | xkbcomp - - | xkbprint - - -nokc -lc en_US | ps2pdf - > qwerty.pdf
+$ history | grep kirjoita
+$ history | gvim -
+$ setxkbmap fi -print | xkbcomp - - | xkbprint - - -nokc -lc en_US | ps2pdf - > qwerty.pdf
 
 How to wrap all lines at 80 characters without breaking any words, and 
 preserve shorter lines:
@@ -28,4 +18,64 @@ Change [b] and [\b] to backstick
 
 Change [code] and [\code] to triple backstick
 :%s/\[\(\/\)\=code\]/```/g
+
+$ gvim ~/.vimrc
+
+colorscheme peachpuff
+set statusline=%<%f\ %{getfsize(expand('%%:p'))}\ %{\ line2byte(line(\"$\")+1)-1\ }\ %h%r%=%-14.(%l,%c%V%)\ %P
+set noruler
+set laststatus=2
+au VimEnter * hi StatusLine guibg=White guifg=Green gui=bold
+au InsertEnter * hi StatusLine guibg=White guifg=Orange gui=bold
+au InsertLeave * hi StatusLine guibg=White guifg=Green gui=bold
+" peachpuff guibg=#ffdab9 
+
+set guifont=Monospace\ 9
+set guioptions-=m
+set guioptions-=T
+set lines=40
+set columns=85
+lan en_GB.utf-8
+set nu
+set hlsearch
+set linebreak
+set ssop=blank,buffers,sesdir,folds,localoptions,tabpages,winpos,winsize
+
+au BufEnter * lcd %:p:h 
+au Bufread,BufNewFile *.pdc,*.pandoc set filetype=pdc
+au Bufread,BufNewFile *.tex set filetype=tex 
+au BufRead,BufNewFile *.scala set filetype=scala
+
+syntax on
+filetype plugin on
+filetype indent on
+
+let s:pattern = '^\(.* \)\([1-9][0-9]*\)$'
+let s:minfontsize = 6
+let s:maxfontsize = 64
+function! AdjustFontSize(amount)
+  if has("gui_gtk2") && has("gui_running")
+    let fontname = substitute(&guifont, s:pattern, '\1', '')
+    let cursize = substitute(&guifont, s:pattern, '\2', '')
+    let newsize = cursize + a:amount
+    if (newsize >= s:minfontsize) && (newsize <= s:maxfontsize)
+      let newfont = fontname . newsize
+      let &guifont = newfont
+    endif
+  else
+    echoerr "You need to run the GTK2 version of Vim to use this function."
+  endif
+endfunction
+
+function! LargerFont()
+  call AdjustFontSize(1)
+endfunction
+command! LargerFont call LargerFont()
+
+function! SmallerFont()
+  call AdjustFontSize(-1)
+endfunction
+command! SmallerFont call SmallerFont()
+
+
 

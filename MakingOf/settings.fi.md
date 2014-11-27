@@ -135,5 +135,6 @@ reRank1 (Result { rDate = a, rMrks = b, rRank = c, rErrs = d }, newRank) =
 
 reRank rs = map reRank1 (zip rs [1..])
 ```
+
 Ohjelmakoodi kokonaisuudessaan: [settings.hs](settings.hs)
 
