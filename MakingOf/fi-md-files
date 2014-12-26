@@ -1,3 +1,5 @@
+#!/bin/bash
+
 fileprefix="book.fi" 
 echo "<meta charset=\"utf-8\">" >$fileprefix.html
 
