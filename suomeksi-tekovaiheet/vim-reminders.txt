@@ -21,8 +21,19 @@ Change [code] and [\code] to triple backstick
 
 $ gvim ~/.vimrc
 
+function! VisualSelectionSize()
+  if mode() == "v"
+    " Exit and re-enter visual mode, because the marks
+    " ('< and '>) have not been updated yet.
+    exe "normal \<ESC>gv" 
+    return (line2byte(line("'>")) - line2byte(line("'<")))
+  else
+    return 0
+  endif
+endfunction 
+
 colorscheme peachpuff
-set statusline=%<%f\ %{getfsize(expand('%%:p'))}\ %{\ line2byte(line(\"$\")+1)-1\ }\ %h%r%=%-14.(%l,%c%V%)\ %P
+set statusline=%<%f\ %{getfsize(expand('%%:p'))}\ %{\ line2byte(line(\"$\")+1)-1\ }\ %{VisualSelectionSize()}\ %h%r%=%-14.(%l,%c%V%)\ %P
 set noruler
 set laststatus=2
 au VimEnter * hi StatusLine guibg=White guifg=Green gui=bold
