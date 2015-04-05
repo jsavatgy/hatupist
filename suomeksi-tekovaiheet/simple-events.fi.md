@@ -1,10 +1,10 @@
 # Tapahtumankäsittelyä
 
-Tarkastellaan lähdekoodia: [simple-events.hs](simple-events.hs)
+Tarkastellaan lähdekoodia: [simple-events.hs](../code/simple-events.hs)
 
 Ohjelma luo tutun ikkunan.
 
-![](simple-events.png)
+![](../pics/simple-events.png)
 
 ## Tekstikentän tekstin muutos
 

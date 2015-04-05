@@ -76,7 +76,7 @@ drawErrorPicture w h = do
 
 Sinipunainen raidoitus ikkunassa näyttää tältä:
 
-![](errorCanvas.png)
+![](../pics/errorCanvas.png)
 
-Ohjelmakoodi: [errorCanvas.hs](errorCanvas.hs)
+Ohjelmakoodi: [errorCanvas.hs](../code/errorCanvas.hs)
 

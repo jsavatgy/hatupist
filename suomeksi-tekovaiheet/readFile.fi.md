@@ -99,5 +99,5 @@ Prelude> :q
 Leaving GHCi.
 ```
 
-Ohjelmakoodi: [readFile.hs](readFile.hs)
+Ohjelmakoodi: [readFile.hs](../code/readFile.hs)
 

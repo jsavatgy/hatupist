@@ -165,5 +165,5 @@ intToDouble i = fromRational (toRational i)
 
 Ohjelman tuottama ikkuna näyttää nyt tältä:
 
-![](Hatupist_011.png)
+![](../pics/Hatupist_011.png)
 

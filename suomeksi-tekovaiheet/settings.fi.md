@@ -55,7 +55,7 @@ import Graphics.UI.Gtk hiding (Settings)
 
 Luomme ohjelmaan myös valikon, josta voi valita kirjoitettavan tiedoston, kirjasimen, asettaa muita asetuksia, nähdä tulosten kehitys ja lopettaa ohjelman. Tietoja-valikko eli tulosten kehitys jätetään toistaiseksi toteuttamatta, eli se on `noop`. Päävalikon valintamahdollisuudet on kerätty standardivalikkoteksteinä, joten ne suomentuvat ja saavat oikean kuvakkeen automaattisesti.
 
-![](menubar.png)
+![](../pics/menubar.png)
 
 ```
 menuBarDescr = 
@@ -136,5 +136,5 @@ reRank1 (Result { rDate = a, rMrks = b, rRank = c, rErrs = d }, newRank) =
 reRank rs = map reRank1 (zip rs [1..])
 ```
 
-Ohjelmakoodi kokonaisuudessaan: [settings.hs](settings.hs)
+Ohjelmakoodi kokonaisuudessaan: [settings.hs](../code/settings.hs)
 

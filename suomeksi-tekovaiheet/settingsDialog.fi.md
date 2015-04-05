@@ -26,7 +26,7 @@ defaultSettings = Settings {
 
 Asetusdialogi tulee sisältämään taulukon, johon edellä esitellyt arvot sijoitetaan.
 
-![](settingsDialog.png)
+![](../pics/settingsDialog.png)
 
 Määrittelemme suomenkieliset otsikot taulukolle sekä tavan totuusarvojen `True` ja `False` esittämiselle.
 
@@ -196,5 +196,5 @@ Tekskikentistä saadaan sopivan kokoisia asettamalla niiden leveydeksi muuttujan
   labelSetWidthChars (gLabel1 gui) (lineLen (s gs) + 3)
 ```
 
-Ohjelmakoodi kokonaisuudessaan: [settingsDialog.hs](settingsDialog.hs)
+Ohjelmakoodi kokonaisuudessaan: [settingsDialog.hs](../code/settingsDialog.hs)
 

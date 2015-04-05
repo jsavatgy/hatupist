@@ -90,7 +90,7 @@ Ohjelman käynnistyessä muutamme tilarivin vihreäksi tekstillä "Voit aloittaa
 
 Lisäämme vielä funktiokutsun `drawStatusText` tapahtumankäsittelijään `whenEntryChanged`, jolloin saamme kaikki kolme tilarivin muunnelmaa, kuten kuvassa.
 
-![](statusbar123.png)
+![](../pics/statusbar123.png)
 
-Ohjelmakoodi: [statusbar.hs](statusbar.hs)
+Ohjelmakoodi: [statusbar.hs](../code/statusbar.hs)
 

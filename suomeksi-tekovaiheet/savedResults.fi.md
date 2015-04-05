@@ -116,7 +116,7 @@ quitProgram gsRef = do
   mainQuit
 ```
 
-Ohjelmakoodi tähän mennessä: [savedResults-01.hs](savedResults-01.hs)
+Ohjelmakoodi tähän mennessä: [savedResults-01.hs](../code/savedResults-01.hs)
 
 
 

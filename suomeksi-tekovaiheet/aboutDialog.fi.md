@@ -39,7 +39,7 @@ showResultPics gsRef = do
 
 Tyhjä dialogi-ikkuna näyttää tältä:
 
-![](aboutDialog-empty.png)
+![](../pics/aboutDialog-empty.png)
 
-Ohjelmakoodi: [aboutDialog.hs](aboutDialog.hs)
+Ohjelmakoodi: [aboutDialog.hs](../code/aboutDialog.hs)
 

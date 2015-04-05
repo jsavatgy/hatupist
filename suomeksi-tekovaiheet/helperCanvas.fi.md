@@ -155,7 +155,7 @@ Rivin vaihtuessa ja ohjelman käynnistyessä seuraava näppäin on ensimmäisen 
    nextLetter = head ((labelStrs !! 0) ++ " ")
 ```
 
-![](helperCanvas.png)
+![](../pics/helperCanvas.png)
 
-Ohjelmakoodi: [helperCanvas.hs](helperCanvas.hs)
+Ohjelmakoodi: [helperCanvas.hs](../code/helperCanvas.hs)
 

@@ -21,15 +21,15 @@ Funktio `onDestroy` on tapahtumankäsittelijä, joka määrittää ikkunan käyt
 
 Tallenna ohjelma nimellä `plain-ui.hs` ja anna pääteikkunaan komento `runhaskell plain-ui.hs`. Ohjelma käynnistyy tulkattavassa muodossa ja tuottaa seuraavan ikkunan ruudulle: 
 
-![](plain-ui.png)
+![](../pics/plain-ui.png)
 
 # Yksinkertainen käyttöliittymä
 
-Katsotaan seuraavaksi tiedostoa [plain-ui-002.hs](plain-ui-002.hs)
+Katsotaan seuraavaksi tiedostoa [plain-ui-002.hs](../code/plain-ui-002.hs)
 
 Ajettaessa komennolla `runhaskell plain-ui-002.hs` ohjelma tuottaa seuraavan ikkunan:
 
-![](plain-ui-002.png)
+![](../pics/plain-ui-002.png)
 
 Ohjelma sisältää kaksi tyypin `Label` komponenttia ja tekstikentän tyyppiä `Entry`. Ne luodaan funktioilla `labelNew` ja `entryNew`. Komponentit sijoitetaan vertikaaliseen laatikkoon `vbox` joka luodaan funktiolla `vBoxNew`. Näiden lisäksi käytetään erottimia `sep1` ja `sep2` tyhjän tilan saamiseksi komponenttien väliin. Erottimet luodaan funktiolla `hSeparatorNew`. Kukin komponentti paketoidaan vertikaaliseen laatikkoon `vbox` funktiolla  `boxPackStart`.
 
@@ -57,9 +57,9 @@ Lisäksi haluamme tekstirivit täsmällisesti allekkain. Siirrämme tekstiä kah
 
 Emme tarvitse myöskään erottimia tekstikenttien väliin, joten poistamme ne.
 
-![](plain-ui-003.png)
+![](../pics/plain-ui-003.png)
 
-Ohjelmakoodi tähän mennessä: [plain-ui-003.hs](plain-ui-003.hs)
+Ohjelmakoodi tähän mennessä: [plain-ui-003.hs](../code/plain-ui-003.hs)
 
 # Tekstitiedoston lukeminen
 
@@ -162,15 +162,15 @@ Prelude> :q
 Leaving GHCi.
 ```
 
-Ohjelmakoodi: [readFile.hs](readFile.hs)
+Ohjelmakoodi: [readFile.hs](../code/readFile.hs)
 
 # Tapahtumankäsittelyä
 
-Tarkastellaan lähdekoodia: [simple-events.hs](simple-events.hs)
+Tarkastellaan lähdekoodia: [simple-events.hs](../code/simple-events.hs)
 
 Ohjelma luo tutun ikkunan.
 
-![](simple-events.png)
+![](../pics/simple-events.png)
 
 ## Tekstikentän tekstin muutos
 
@@ -398,7 +398,7 @@ intToDouble i = fromRational (toRational i)
 
 Ohjelman tuottama ikkuna näyttää nyt tältä:
 
-![](Hatupist_011.png)
+![](../pics/Hatupist_011.png)
 
 # Ohjelman tila
 
@@ -542,9 +542,9 @@ advanceLine gui lines gsRef gs = do
 ```
 Ohjelman tulostama ikkuna:
 
-![](linefeed.png)
+![](../pics/linefeed.png)
 
-Lähdekoodi [linefeed.hs](linefeed.hs)
+Lähdekoodi [linefeed.hs](../code/linefeed.hs)
 
 # Ajanottoa
 
@@ -662,7 +662,7 @@ Started with Correct
 (36.21953082084656,1)
 ```
 
-Ohjelmakoodi [timing.hs](timing.hs)
+Ohjelmakoodi [timing.hs](../code/../code/timing.hs)
 
 Ensi kerralla käytämme tätä hyväksi, ja keräämme nämä tiedot niitä vastaaviin tietorakenteisiin.
 
@@ -759,13 +759,13 @@ Käytännössä nämä muodostavat kasvavan taulukon, jossa kenttä `iNum` kerto
 ```
 [Interval {iNum = 1, iMrks = 9, iErrs = 0},Interval {iNum = 0, iMrks = 68, iErrs = 2}]
 ```
-![](timing-02.png)
+![](../pics/timing-02.png)
 
-Jatkamme tulostietojen käsittelemistä ensi kerralla. Ohjelmakoodi tähän mennessä [timing-02.hs](timing-02.hs)
+Jatkamme tulostietojen käsittelemistä ensi kerralla. Ohjelmakoodi tähän mennessä [timing-02.hs](../code/timing-02.hs)
 
 # Tulostaulut R, S ja I
 
-![](result-tables-02.png)
+![](../pics/result-tables-02.png)
 
 Tulostauluja on siis kolme, näistä istunnon S-taulu päivitetään puolen sekunnin välein. Kaksi muuta taulua päivitetään, kun siirrytään intervallista toiseen. Monadin sisällä tämä ehtolause ei ole kovin selkeästi luettava, mutta se on seuraavassa:
 
@@ -859,7 +859,7 @@ addTime status i intervals =
     else intervals
 ```
 
-Ohjelmakoodi: [result-tables-02.hs](result-tables-02.hs)
+Ohjelmakoodi: [result-tables-02.hs](../code/result-tables-02.hs)
 
 # Tulosten vertailua
 
@@ -970,9 +970,9 @@ Olemme tässä jälleen käyttäneet epämääräisiä keinoja huolehtimaan, ett
 
 Ohjelman ikkuna näyttää tässä vaiheessa seuraavalta:
 
-![](result-tables-03.png)
+![](../pics/result-tables-03.png)
 
-Ohjelmakoodi tähän mennessä: [result-tables-03.hs](result-tables-03.hs)
+Ohjelmakoodi tähän mennessä: [result-tables-03.hs](../code/result-tables-03.hs)
 
 
 # Kirjasin
@@ -1093,7 +1093,7 @@ quitProgram gsRef = do
   mainQuit
 ```
 
-Ohjelmakoodi tähän mennessä: [savedResults-01.hs](savedResults-01.hs)
+Ohjelmakoodi tähän mennessä: [savedResults-01.hs](../code/savedResults-01.hs)
 
 
 
@@ -1154,7 +1154,7 @@ import Graphics.UI.Gtk hiding (Settings)
 
 Luomme ohjelmaan myös valikon, josta voi valita kirjoitettavan tiedoston, kirjasimen, asettaa muita asetuksia, nähdä tulosten kehitys ja lopettaa ohjelman. Tietoja-valikko eli tulosten kehitys jätetään toistaiseksi toteuttamatta, eli se on `noop`. Päävalikon valintamahdollisuudet on kerätty standardivalikkoteksteinä, joten ne suomentuvat ja saavat oikean kuvakkeen automaattisesti.
 
-![](menubar.png)
+![](../pics/menubar.png)
 
 ```
 menuBarDescr = 
@@ -1235,7 +1235,7 @@ reRank1 (Result { rDate = a, rMrks = b, rRank = c, rErrs = d }, newRank) =
 reRank rs = map reRank1 (zip rs [1..])
 ```
 
-Ohjelmakoodi kokonaisuudessaan: [settings.hs](settings.hs)
+Ohjelmakoodi kokonaisuudessaan: [settings.hs](../code/settings.hs)
 
 # Virheraidoitus
 
@@ -1315,9 +1315,9 @@ drawErrorPicture w h = do
 
 Sinipunainen raidoitus ikkunassa näyttää tältä:
 
-![](errorCanvas.png)
+![](../pics/errorCanvas.png)
 
-Ohjelmakoodi: [errorCanvas.hs](errorCanvas.hs)
+Ohjelmakoodi: [errorCanvas.hs](../code/errorCanvas.hs)
 
 # Tilarivi
 
@@ -1411,9 +1411,9 @@ Ohjelman käynnistyessä muutamme tilarivin vihreäksi tekstillä "Voit aloittaa
 
 Lisäämme vielä funktiokutsun `drawStatusText` tapahtumankäsittelijään `whenEntryChanged`, jolloin saamme kaikki kolme tilarivin muunnelmaa, kuten kuvassa.
 
-![](statusbar123.png)
+![](../pics/statusbar123.png)
 
-Ohjelmakoodi: [statusbar.hs](statusbar.hs)
+Ohjelmakoodi: [statusbar.hs](../code/statusbar.hs)
 
 # Ajastimen väripalkki
 
@@ -1433,7 +1433,7 @@ valLimits  = (1.00, 0.25)
 limitsFrom = (0.00, 12.3)
 ```
 
-![](resultColorTheme.png)
+![](../pics/resultColorTheme.png)
 
 ```
 $ ghci
@@ -1499,7 +1499,7 @@ drawBox y rankD = do
   paintText 40 (13+y*24) (show (round (rankD)))
 ```
 
-Ohjelman lähdekoodi: [resultColorTheme.hs](resultColorTheme.hs)
+Ohjelman lähdekoodi: [resultColorTheme.hs](../code/resultColorTheme.hs)
 
 ## Väripalkki pääohjelmassa
 
@@ -1584,9 +1584,9 @@ onTimeToClear canvas = do
   return False
 ```
 
-![](timingCanvas.png)
+![](../pics/timingCanvas.png)
 
-Ohjelmakoodi kokonaisuudessaan: [timingCanvas.hs](timingCanvas.hs)
+Ohjelmakoodi kokonaisuudessaan: [timingCanvas.hs](../code/timingCanvas.hs)
 
 # Avustava näppäimistö
 
@@ -1745,9 +1745,9 @@ Rivin vaihtuessa ja ohjelman käynnistyessä seuraava näppäin on ensimmäisen 
    nextLetter = head ((labelStrs !! 0) ++ " ")
 ```
 
-![](helperCanvas.png)
+![](../pics/helperCanvas.png)
 
-Ohjelmakoodi: [helperCanvas.hs](helperCanvas.hs)
+Ohjelmakoodi: [helperCanvas.hs](../code/helperCanvas.hs)
 
 # Asetusdialogi
 
@@ -1777,7 +1777,7 @@ defaultSettings = Settings {
 
 Asetusdialogi tulee sisältämään taulukon, johon edellä esitellyt arvot sijoitetaan.
 
-![](settingsDialog.png)
+![](../pics/settingsDialog.png)
 
 Määrittelemme suomenkieliset otsikot taulukolle sekä tavan totuusarvojen `True` ja `False` esittämiselle.
 
@@ -1947,7 +1947,7 @@ Tekskikentistä saadaan sopivan kokoisia asettamalla niiden leveydeksi muuttujan
   labelSetWidthChars (gLabel1 gui) (lineLen (s gs) + 3)
 ```
 
-Ohjelmakoodi kokonaisuudessaan: [settingsDialog.hs](settingsDialog.hs)
+Ohjelmakoodi kokonaisuudessaan: [settingsDialog.hs](../code/settingsDialog.hs)
 
 # Kun tiedoston luku ei onnistu
 
@@ -1977,7 +1977,7 @@ tryReadFile fname = do
 
 Funktio `tryReadFile` kutsuu yhä edelleen funktiota `readFile`, mutta funktion `catch` ensimmäisenä parametrina, jolloin funktion suorituksen epäonnistuessa nostettuun poikkeukseen vastataan dialogi-ikkunalla.
 
-![](fileError.png)
+![](../pics/fileError.png)
 
 Virhetilanteessa luemme tekstiriveiksi latinankielisiä sananlaskuja, jotka määrittelemme ohjelmassa.
 
@@ -1997,7 +1997,7 @@ proverbs = [
   ]
 ```
 
-Ohjelmakoodi: [fileError.hs](fileError.hs)
+Ohjelmakoodi: [fileError.hs](../code/fileError.hs)
 
 # Tietoja-dialogi
 
@@ -2040,7 +2040,7 @@ showResultPics gsRef = do
 
 Tyhjä dialogi-ikkuna näyttää tältä:
 
-![](aboutDialog-empty.png)
+![](../pics/aboutDialog-empty.png)
 
-Ohjelmakoodi: [aboutDialog.hs](aboutDialog.hs)
+Ohjelmakoodi: [aboutDialog.hs](../code/aboutDialog.hs)
 

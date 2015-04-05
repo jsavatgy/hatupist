@@ -21,15 +21,15 @@ Funktio `onDestroy` on tapahtumankäsittelijä, joka määrittää ikkunan käyt
 
 Tallenna ohjelma nimellä `plain-ui.hs` ja anna pääteikkunaan komento `runhaskell plain-ui.hs`. Ohjelma käynnistyy tulkattavassa muodossa ja tuottaa seuraavan ikkunan ruudulle: 
 
-![](plain-ui.png)
+![](../pics/plain-ui.png)
 
 # Yksinkertainen käyttöliittymä
 
-Katsotaan seuraavaksi tiedostoa [plain-ui-002.hs](plain-ui-002.hs)
+Katsotaan seuraavaksi tiedostoa [plain-ui-002.hs](../code/plain-ui-002.hs)
 
 Ajettaessa komennolla `runhaskell plain-ui-002.hs` ohjelma tuottaa seuraavan ikkunan:
 
-![](plain-ui-002.png)
+![](../pics/plain-ui-002.png)
 
 Ohjelma sisältää kaksi tyypin `Label` komponenttia ja tekstikentän tyyppiä `Entry`. Ne luodaan funktioilla `labelNew` ja `entryNew`. Komponentit sijoitetaan vertikaaliseen laatikkoon `vbox` joka luodaan funktiolla `vBoxNew`. Näiden lisäksi käytetään erottimia `sep1` ja `sep2` tyhjän tilan saamiseksi komponenttien väliin. Erottimet luodaan funktiolla `hSeparatorNew`. Kukin komponentti paketoidaan vertikaaliseen laatikkoon `vbox` funktiolla  `boxPackStart`.
 
@@ -57,7 +57,7 @@ Lisäksi haluamme tekstirivit täsmällisesti allekkain. Siirrämme tekstiä kah
 
 Emme tarvitse myöskään erottimia tekstikenttien väliin, joten poistamme ne.
 
-![](plain-ui-003.png)
+![](../pics/plain-ui-003.png)
 
-Ohjelmakoodi tähän mennessä: [plain-ui-003.hs](plain-ui-003.hs)
+Ohjelmakoodi tähän mennessä: [plain-ui-003.hs](../code/plain-ui-003.hs)
 

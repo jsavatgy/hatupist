@@ -114,7 +114,7 @@ Started with Correct
 (36.21953082084656,1)
 ```
 
-Ohjelmakoodi [timing.hs](timing.hs)
+Ohjelmakoodi [timing.hs](../code/../code/timing.hs)
 
 Ensi kerralla käytämme tätä hyväksi, ja keräämme nämä tiedot niitä vastaaviin tietorakenteisiin.
 

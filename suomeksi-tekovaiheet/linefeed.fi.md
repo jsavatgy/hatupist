@@ -60,7 +60,7 @@ advanceLine gui lines gsRef gs = do
 ```
 Ohjelman tulostama ikkuna:
 
-![](linefeed.png)
+![](../pics/linefeed.png)
 
-Lähdekoodi [linefeed.hs](linefeed.hs)
+Lähdekoodi [linefeed.hs](../code/linefeed.hs)
 

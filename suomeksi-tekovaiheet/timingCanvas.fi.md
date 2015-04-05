@@ -16,7 +16,7 @@ valLimits  = (1.00, 0.25)
 limitsFrom = (0.00, 12.3)
 ```
 
-![](resultColorTheme.png)
+![](../pics/resultColorTheme.png)
 
 ```
 $ ghci
@@ -82,7 +82,7 @@ drawBox y rankD = do
   paintText 40 (13+y*24) (show (round (rankD)))
 ```
 
-Ohjelman lähdekoodi: [resultColorTheme.hs](resultColorTheme.hs)
+Ohjelman lähdekoodi: [resultColorTheme.hs](../code/resultColorTheme.hs)
 
 ## Väripalkki pääohjelmassa
 
@@ -167,7 +167,7 @@ onTimeToClear canvas = do
   return False
 ```
 
-![](timingCanvas.png)
+![](../pics/timingCanvas.png)
 
-Ohjelmakoodi kokonaisuudessaan: [timingCanvas.hs](timingCanvas.hs)
+Ohjelmakoodi kokonaisuudessaan: [timingCanvas.hs](../code/timingCanvas.hs)
 

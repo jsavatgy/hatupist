@@ -91,7 +91,7 @@ Käytännössä nämä muodostavat kasvavan taulukon, jossa kenttä `iNum` kerto
 ```
 [Interval {iNum = 1, iMrks = 9, iErrs = 0},Interval {iNum = 0, iMrks = 68, iErrs = 2}]
 ```
-![](timing-02.png)
+![](../pics/timing-02.png)
 
-Jatkamme tulostietojen käsittelemistä ensi kerralla. Ohjelmakoodi tähän mennessä [timing-02.hs](timing-02.hs)
+Jatkamme tulostietojen käsittelemistä ensi kerralla. Ohjelmakoodi tähän mennessä [timing-02.hs](../code/timing-02.hs)
 

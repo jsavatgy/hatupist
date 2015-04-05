@@ -26,7 +26,7 @@ tryReadFile fname = do
 
 Funktio `tryReadFile` kutsuu yhä edelleen funktiota `readFile`, mutta funktion `catch` ensimmäisenä parametrina, jolloin funktion suorituksen epäonnistuessa nostettuun poikkeukseen vastataan dialogi-ikkunalla.
 
-![](fileError.png)
+![](../pics/fileError.png)
 
 Virhetilanteessa luemme tekstiriveiksi latinankielisiä sananlaskuja, jotka määrittelemme ohjelmassa.
 
@@ -46,5 +46,5 @@ proverbs = [
   ]
 ```
 
-Ohjelmakoodi: [fileError.hs](fileError.hs)
+Ohjelmakoodi: [fileError.hs](../code/fileError.hs)
 

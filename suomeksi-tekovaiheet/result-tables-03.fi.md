@@ -107,8 +107,8 @@ Olemme tässä jälleen käyttäneet epämääräisiä keinoja huolehtimaan, ett
 
 Ohjelman ikkuna näyttää tässä vaiheessa seuraavalta:
 
-![](result-tables-03.png)
+![](../pics/result-tables-03.png)
 
-Ohjelmakoodi tähän mennessä: [result-tables-03.hs](result-tables-03.hs)
+Ohjelmakoodi tähän mennessä: [result-tables-03.hs](../code/result-tables-03.hs)
 
 

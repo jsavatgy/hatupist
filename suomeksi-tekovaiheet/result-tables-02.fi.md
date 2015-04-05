@@ -1,6 +1,6 @@
 # Tulostaulut R, S ja I
 
-![](result-tables-02.png)
+![](../pics/result-tables-02.png)
 
 Tulostauluja on siis kolme, näistä istunnon S-taulu päivitetään puolen sekunnin välein. Kaksi muuta taulua päivitetään, kun siirrytään intervallista toiseen. Monadin sisällä tämä ehtolause ei ole kovin selkeästi luettava, mutta se on seuraavassa:
 
@@ -94,5 +94,5 @@ addTime status i intervals =
     else intervals
 ```
 
-Ohjelmakoodi: [result-tables-02.hs](result-tables-02.hs)
+Ohjelmakoodi: [result-tables-02.hs](../code/result-tables-02.hs)
 
