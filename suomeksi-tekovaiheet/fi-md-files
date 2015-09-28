@@ -7,6 +7,6 @@ cat plain-ui.fi.md readFile.fi.md simple-events.fi.md result-tables.fi.md gamest
 
 
 markdown $fileprefix.md >>$fileprefix.html
-firefox $fileprefix.html
-rm $fileprefix.html
+firefox $fileprefix.html  > /dev/null 2>&1 &
+# rm $fileprefix.html
 
