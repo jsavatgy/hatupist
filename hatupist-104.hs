@@ -183,6 +183,8 @@ proverbs = [
   "Dives est qui sibi nihil deesse putat."
   ]
 
+surrogate = unlines proverbs
+
 tryReadFile fname = do
   text <- readFile fname `catch` 
     \(SomeException e) -> ( do 
@@ -192,15 +194,18 @@ tryReadFile fname = do
         ("Tiedostoa " ++ fname ++ " ei voitu lukea.")
       dialogRun dialog
       widgetDestroy dialog
-      return (unlines proverbs))
+      return surrogate)
   return text
 
 getLines gsRef = do
   gs <- readIORef gsRef
   originalText <- tryReadFile (textfile (s gs))
-  let textLinesss = colLines (collectWords (words (originalText)) 
-                             (lineLen (s gs)))
-      textLiness = map (++" ") textLinesss
+  let 
+    wds1 = words originalText
+    wds2 = if (length wds1 > 0) then wds1 else words surrogate
+    textLinesss = colLines (collectWords wds2 
+                           (lineLen (s gs)))
+    textLiness = map (++" ") textLinesss
   writeIORef gsRef gs {
     textLines = textLiness
   }
@@ -780,7 +785,7 @@ showResultDialog titles files num = do
   widgetDestroy dialog
   case response of
     ResponseUser n -> showResultDialog titles files ((num + n) `mod` maxNum)
-    ResponseClose  -> return ()
+    _ -> return ()
   return () 
 
 showResultPics gsRef = do
