@@ -13,33 +13,44 @@ menuBarDescr =
   ]
 ```
 
-Toteutamme kuvaajien piirron myöhemmin. Kuvaajia varten varaamme tilan vieritysikkunalle `scrolledWin`.
+Toteutamme kuvaajien piirron myöhemmin. Dialogi-ikkuna esittää kerrallaan yhden kuvaajan. Valinnat "Alas" ja "Ylös" avaavat uuden dialogi-ikkunan uudella kuvaajalla. Painikkeiden palautusarvot ovat `ResponseUser 1` ja `ResponseUser (maxNum-1)`. Uusi dialogi-ikkuna luodaan komennolla `showResultDialog titles files ((num + n) mod maxNum`. Valinnan "Sulje" palautusarvo on `ResponseDeleteEvent`. Esc-näppäimen palautusarvo dialogi-ikkunoissa on oletusarvoisesti `ResponseDeleteEvent`.
 
 ```
-showResultPics gsRef = do
-  gs <- readIORef gsRef
+showResultDialog titles files num = do
   dialog <- dialogNew
-  set dialog [ windowTitle := "Tietoja" ]
+  let maxNum = length framelist
+  set dialog [ 
+    windowTitle := "Tietoja (" ++ show (num+1) ++ "/" ++ show maxNum ++ ")"]
   upbox <- dialogGetUpper dialog
-
   vbox1 <- vBoxNew False 0
-  scrolledWin <- scrolledWindowNew Nothing Nothing
-  scrolledWindowSetPolicy scrolledWin PolicyAutomatic PolicyAutomatic
-  widgetSetSizeRequest scrolledWin 400 100
-  boxPackStart upbox scrolledWin PackGrow 0
-  scrolledWindowAddWithViewport scrolledWin vbox1
+  createFrame vbox1 (titles !! num) (files !! num)
+  boxPackStart upbox vbox1 PackNatural 0
 
+  dialogAddButton dialog stockGoDown (ResponseUser 1)
+  dialogAddButton dialog stockGoUp (ResponseUser (maxNum-1))
   dialogAddButton dialog stockClose ResponseClose
-
   widgetShowAll upbox
   response <- dialogRun dialog
   widgetDestroy dialog
-  return ()
+  case response of
+    ResponseUser n -> showResultDialog titles files ((num + n) `mod` maxNum)
+    _ -> return ()
+  return () 
+
+showResultPics gsRef = do
+  gs <- readIORef gsRef
+  let 
+    valuess = [(
+      picName fn gs,
+      s,collectResults x y c (r gs)) | (fn,s,x,y,c) <- framelist]
+    (w,h)  = picSize (s gs)
+    titles = [s | (_,s,_,_,_) <- framelist]
+    files  = map (\m -> picName m gs) [f | (f,_,_,_,_) <- framelist]
+  mapM (\(fn,s,v) -> createImage fn w h draw1 v) valuess
+  showResultDialog titles files 0
+  return () 
 ```
 
-Tyhjä dialogi-ikkuna näyttää tältä:
 
-![](../pics/aboutDialog-empty.png)
-
-Ohjelmakoodi: [aboutDialog.hs](../code/aboutDialog.hs)
+![](../pics/aboutDialog-date-vs-speed.png)
 
