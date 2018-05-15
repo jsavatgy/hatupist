@@ -1,0 +1,1935 @@
+<meta charset="utf-8">
+<h1>Hatupist</h1>
+
+<p>Hatupist on kirjoitusnopeuden harjoitusohjelma. Rakennamme ohjelman alkaen tyhjästä ikkunasta. Käytämme Haskell-ohjelmointikieltä ja Gtk2hs-käyttöliittymäkirjastoa.</p>
+
+<h1>Tyhjä ikkuna</h1>
+
+<p>Seuraava ohjelma avaa yksinkertaisen tyhjän ikkunan:</p>
+
+<pre><code>import Graphics.UI.Gtk
+
+main = do
+  initGUI
+  window &lt;- windowNew
+  onDestroy window mainQuit
+  widgetShowAll window
+  mainGUI
+</code></pre>
+
+<p>Funktio <code>onDestroy</code> on tapahtumankäsittelijä, joka määrittää ikkunan käyttäytymisen suljettaessa ikkuna esimerkiksi hiirellä ruksia naksautettaessa. Toimenpide yhdistetään funktioon <code>mainQuit</code>, joka on ohjelman lopetuskomento.</p>
+
+<p>Tallenna ohjelma nimellä <code>plain-ui.hs</code> ja anna pääteikkunaan komento <code>runhaskell plain-ui.hs</code>. Ohjelma käynnistyy tulkattavassa muodossa ja tuottaa seuraavan ikkunan ruudulle:</p>
+
+<p><img src="../pics/plain-ui.png" alt="" /></p>
+
+<h1>Yksinkertainen käyttöliittymä</h1>
+
+<p>Katsotaan seuraavaksi tiedostoa <a href="../code/plain-ui-002.hs">plain-ui-002.hs</a></p>
+
+<p>Ajettaessa komennolla <code>runhaskell plain-ui-002.hs</code> ohjelma tuottaa seuraavan ikkunan:</p>
+
+<p><img src="../pics/plain-ui-002.png" alt="" /></p>
+
+<p>Ohjelma sisältää kaksi tyypin <code>Label</code> komponenttia ja tekstikentän tyyppiä <code>Entry</code>. Ne luodaan funktioilla <code>labelNew</code> ja <code>entryNew</code>. Komponentit sijoitetaan vertikaaliseen laatikkoon <code>vbox</code> joka luodaan funktiolla <code>vBoxNew</code>. Näiden lisäksi käytetään erottimia <code>sep1</code> ja <code>sep2</code> tyhjän tilan saamiseksi komponenttien väliin. Erottimet luodaan funktiolla <code>hSeparatorNew</code>. Kukin komponentti paketoidaan vertikaaliseen laatikkoon <code>vbox</code> funktiolla  <code>boxPackStart</code>.</p>
+
+<p>Esimerkkinä tyypin <code>Label</code> komponentti:</p>
+
+<pre><code>  label1 &lt;- labelNew (Just xxx)
+  miscSetAlignment label1 0 0
+  boxPackStart vbox label1 PackNatural 0
+</code></pre>
+
+<h1>Tekstikentän asettelua</h1>
+
+<p>Kuvassa näkyvän tekstikentän sinisen reunuksen saamme pois komennolla</p>
+
+<pre><code>  entrySetHasFrame entry False
+</code></pre>
+
+<p>Lisäksi haluamme tekstirivit täsmällisesti allekkain. Siirrämme tekstiä kahdella pikselillä oikealle:</p>
+
+<pre><code>  miscSetPadding   label1 2 0
+  miscSetPadding   label2 2 0
+</code></pre>
+
+<p>Emme tarvitse myöskään erottimia tekstikenttien väliin, joten poistamme ne.</p>
+
+<p><img src="../pics/plain-ui-003.png" alt="" /></p>
+
+<p>Ohjelmakoodi tähän mennessä: <a href="../code/plain-ui-003.hs">plain-ui-003.hs</a></p>
+
+<h1>Tekstitiedoston lukeminen</h1>
+
+<p>Tekstitiedoston manipulointiin voisi käyttää vaikkapa seuraavanlaista koodia:</p>
+
+<pre><code>lineLen = 35
+
+main = do
+  originalText &lt;- readFile ("morse.txt")
+  print originalText
+  let liness = colLines (collectWords (words (originalText)) lineLen)
+  let lines = map (++" ") liness
+  mapM_ putStrLn (lines)
+
+colLines (xs:xss) =
+  (unwords xs) : colLines xss
+colLines [] = []
+
+collectWords [] n = []
+collectWords ys n =
+  p1 : collectWords p2 n
+  where
+  (p1,p2) = splitAt (length (untilLen ys 0 n)) ys
+
+untilLen (t:ts) s n 
+  | s+x&lt;n || s==0  = t : untilLen ts (s+x) n
+  | otherwise      = []
+  where
+  x = length t + 1
+untilLen [] s n = []
+</code></pre>
+
+<p>Kirjoitetaan tekstitiedostoon <code>morse.txt</code> kokeilumielessä seuraava teksti:</p>
+
+<pre><code>Morse-aakkoset.
+
+Graafinen muistisääntö.
+
+Piirretään suuri A-kirjain. Väritetään kirjaimen huippupiste ja 
+vaakaviiva. A-kirjain on siten ti-taa.
+
+Seuraavaksi piirretään I-kirjain. Väritetään kirjaimen molemmat päät. 
+I-kirjain on ti-ti.
+
+E-kirjain on keskimmäisen poikkiviivan leikkauspiste pystyviivan kanssa. 
+E-kirjain on ti.
+
+O-kirjaimessa on pitkästi ympyrän kehää väritettäväksi. Täytetään kehä 
+kolmella viivalla. O-kirjain on taa-taa-taa.
+
+U-kirjaimesta väritetään molemmat huippupisteet ja pohjakaari. U-kirjain 
+on ti-ti-taa.
+</code></pre>
+
+<p>Edellinen ohjelmakoodi tulostaa nyt:</p>
+
+<pre><code>$ runhaskell readFile.hs 
+"Morse-aakkoset.\n\nGraafinen muistis\228\228nt\246.\n\nPiirret\228\228n su
+uri A-kirjain. V\228ritet\228\228n kirjaimen huippupiste ja vaakaviiva. A-k
+irjain on siten ti-taa.\n\nSeuraavaksi piirret\228\228n I-kirjain. V\228rit
+et\228\228n kirjaimen molemmat p\228\228t. I-kirjain on ti-ti.\n\nE-kirjain
+ on keskimm\228isen poikkiviivan leikkauspiste pystyviivan kanssa. E-kirjai
+n on ti.\n\nO-kirjaimessa on pitk\228sti ympyr\228n keh\228\228 v\228ritett
+\228v\228ksi. T\228ytet\228\228n keh\228 kolmella viivalla. O-kirjain on ta
+a-taa-taa.\n\nU-kirjaimesta v\228ritet\228\228n molemmat huippupisteet ja p
+ohjakaari. U-kirjain on ti-ti-taa.\n\n"
+Morse-aakkoset. Graafinen 
+muistisääntö. Piirretään suuri 
+A-kirjain. Väritetään kirjaimen 
+huippupiste ja vaakaviiva. 
+A-kirjain on siten ti-taa. 
+Seuraavaksi piirretään I-kirjain. 
+Väritetään kirjaimen molemmat 
+päät. I-kirjain on ti-ti. 
+E-kirjain on keskimmäisen 
+poikkiviivan leikkauspiste 
+pystyviivan kanssa. E-kirjain on 
+ti. O-kirjaimessa on pitkästi 
+ympyrän kehää väritettäväksi. 
+Täytetään kehä kolmella viivalla. 
+O-kirjain on taa-taa-taa. 
+U-kirjaimesta väritetään molemmat 
+huippupisteet ja pohjakaari. 
+U-kirjain on ti-ti-taa. 
+</code></pre>
+
+<p>Tekstin manipulointiin tarvittavat rutiinit riippuvat hieman tekstitiedoston muodosta, ja periaatteessa tämän vaiheen voisi jopa sivuuttaa muokkaamalla tekstitiedosto valmiiksi tekstieditorilla. Haskell-kielen Prelude-kirjastosta käytettäviä funktioita olivat <code>words</code> ja <code>unwords</code>, joiden toimintaperiaate seuraavassa:</p>
+
+<pre><code>$ ghci
+Prelude&gt; let ws = words "U-kirjaimesta väritetään molemmat huippupisteet ja pohjakaari"
+Prelude&gt; ws
+["U-kirjaimesta","v\228ritet\228\228n","molemmat","huippupisteet","ja","pohjakaari"]
+Prelude&gt; unwords ws
+"U-kirjaimesta v\228ritet\228\228n molemmat huippupisteet ja pohjakaari"
+Prelude&gt; :q
+Leaving GHCi.
+</code></pre>
+
+<p>Ohjelmakoodi: <a href="../code/readFile.hs">readFile.hs</a></p>
+
+<h1>Tapahtumankäsittelyä</h1>
+
+<p>Tarkastellaan lähdekoodia: <a href="../code/simple-events.hs">simple-events.hs</a></p>
+
+<p>Ohjelma luo tutun ikkunan.</p>
+
+<p><img src="../pics/simple-events.png" alt="" /></p>
+
+<h2>Tekstikentän tekstin muutos</h2>
+
+<p>Funktiolla <code>onEditableChanged</code> tekstikenttä <code>entry</code> saa tapahtumankäsittelijän <code>entryTextChanged</code>.</p>
+
+<pre><code>  entry  &lt;- entryNew
+  entrySetHasFrame entry False
+  boxPackStart vbox entry PackNatural 3
+  onEditableChanged entry ( 
+    entryTextChanged entry)
+</code></pre>
+
+<p>Tapahtumankäsittelijän toiminta on yksinkertainen, se tulostaa tapahtuman nimen, sen POSIX-ajan ja tekstikentän tekstin ruudulle.</p>
+
+<pre><code>entryTextChanged entry = do 
+  txt &lt;- entryGetText entry
+  pt  &lt;- getPOSIXTime
+  putStrLn ("Entry ## " ++ (show pt) ++ ": " ++ txt)
+  return ()
+</code></pre>
+
+<h2>Ajastintapahtuma</h2>
+
+<p>Ajastin alustetaan funktiolla <code>timeoutAdd</code>. Ensimmäinen parametri on tapahtumankäsittelifunktio <code>timeIsOut</code>. Toinen parametri on aika millisekunteina.</p>
+
+<pre><code>  timeoutAdd timeIsOut 1000
+</code></pre>
+
+<p>Myös tämä tapahtumankäsittelijä on toiminnaltaan yksinkertainen, tulostaen tapahtuman nimen ja POSIX-ajan.</p>
+
+<pre><code>timeIsOut = do
+  pt &lt;- getPOSIXTime
+  putStrLn ("Timer ## " ++ show pt)
+  return True
+</code></pre>
+
+<p>Tyypillinen käyttökerta tulostaa</p>
+
+<pre><code>$ runhaskell simple-events.hs 
+Timer ## 1413918113.807756s
+Entry ## 1413918114.648762s: x
+Timer ## 1413918114.808328s
+Entry ## 1413918115.200725s: xx
+Entry ## 1413918115.662261s: xxx
+Timer ## 1413918115.80882s
+Entry ## 1413918116.278175s: xxxx
+Timer ## 1413918116.810192s
+Entry ## 1413918117.120765s: xxxx 
+Entry ## 1413918117.478783s: xxxx x
+Entry ## 1413918117.682427s: xxxx xx
+Timer ## 1413918117.81128s
+Timer ## 1413918118.812609s
+Timer ## 1413918119.813201s
+$ 
+</code></pre>
+
+<h1>Tulostaulut</h1>
+
+<p>Ohjelman ajatus on, että kirjoitusnopeuden mittaus jaetaan puolen minuutin intervalleihin (jatkossa <code>i</code>-etuliite nimissä). Varsinainen tulos on neljän peräkkäisen intervallin merkkimäärien summa, eli kahden minuutin jakso. Tuloksia ylläpitävä tietorakenne on nimeltään <code>Result</code> (<code>r</code>-etuliite nimissä). Istunnolla (Session, <code>s</code>-etuliite) puolestaan tarkoitetaan ajanjaksoa ensimmäisen merkin syöttämisestä ikkunan sulkemiseen, tietorakenne <code>Timing</code>.</p>
+
+<pre><code>iDuration = 30
+rDuration = 120
+amountOfIntervals = rDuration `div` iDuration
+
+data Result = Result { 
+  rDate :: String, 
+  rMrks, rRank, rErrs :: Int
+} deriving (Read, Show)
+
+zeroResult = Result {
+  rDate = "0000-00-00 00:00:00", 
+  rMrks = 0, rRank = 0, rErrs = 0 }
+
+data Timing = Timing {
+  sSession :: String, sTotal :: Int, 
+  sSecsLeft :: Int,   sSpeed :: Double
+} deriving Show
+
+zeroTiming = Timing {
+  sSession = "00:00", sTotal = 0,
+  sSecsLeft = iDuration, sSpeed = 0.0 }
+
+data Interval = Interval {
+  iNum, iMrks, iErrs :: Int 
+} deriving Show
+
+zeroInterval = Interval {
+  iNum = -1, iMrks = 0, iErrs = 0 }
+</code></pre>
+
+<p>Näitä kolmea tietorakennetta kohden on oma tulostaulunsa ohjelman ikkunassa. Tulostauluun luotava alustava malli, sarakkeiden otsikot ja tätä vastaava funktio solun sisällön tulostamiseksi on määritelty seuraavassa:</p>
+
+<pre><code>rInitModel = replicate 3 zeroResult
+rColTitles = ["Päiväys", "Tulos",         "Sija",        "Virheitä" ]
+rColFuncs  = [ rDate,     rSpeed . rMrks,  show . rRank,  rErrorPros]
+
+sInitModel = [zeroTiming]
+sColTitles = ["Istunto", "Yhteensä",     "Jakso",          "Jaksonopeus"]
+sColFuncs  = [ sSession,  show . sTotal,  show . sSecsLeft, f01 . sSpeed]
+
+iInitModel = replicate amountOfIntervals zeroInterval
+iColTitles = ["Alkoi",        "Päättyi",    "Nopeus",       "Virheitä" ]
+iColFuncs  = [ iStarts . iNum, iEnds . iNum, iSpeed . iMrks, iErrorPros]
+</code></pre>
+
+<p>Käyttöliittymä luodaan tuttuun tapaan funktiossa <code>createGUI</code>:</p>
+
+<pre><code>createGUI = do
+  window &lt;- windowNew
+  onDestroy window mainQuit
+
+  outerVBox  &lt;- vBoxNew False 0
+  middleHBox &lt;- hBoxNew False 0
+  innerVBox1 &lt;- vBoxNew False 0
+  innerVBox2 &lt;- vBoxNew False 0
+
+  rModel &lt;- setupView rInitModel rColTitles rColFuncs innerVBox1
+  sModel &lt;- setupView sInitModel sColTitles sColFuncs innerVBox1
+  iModel &lt;- setupView iInitModel iColTitles iColFuncs innerVBox2
+
+  boxPackStart middleHBox innerVBox1 PackNatural 0
+  boxPackStart middleHBox innerVBox2 PackNatural 6
+  boxPackStart outerVBox middleHBox PackNatural 10
+
+  set window [
+    containerBorderWidth := 10,
+    windowTitle := "Hatupist",
+    containerChild := outerVBox ]
+
+  label1 &lt;- labelNew (Just xxx)
+  miscSetAlignment label1 0 0
+  boxPackStart outerVBox label1 PackNatural 0
+
+  label2 &lt;- labelNew (Just xxx)
+  miscSetAlignment label2 0 0
+  boxPackStart outerVBox label2 PackNatural 0
+
+  textview &lt;- textViewNew
+  boxPackStart outerVBox textview PackNatural 3
+  buffer &lt;- textViewGetBuffer textview
+
+  widgetShowAll window
+
+  return GUI {
+    gBuffer = buffer,
+    gLabel1 = label1,
+    gLabel2 = label2
+  }
+</code></pre>
+
+<p>Tulostaulujen näkymä luodaan funktiolla <code>setupView</code>, joka tässä vaiheessa näyttää seuraavalta:</p>
+
+<pre><code>setupView initModel titles funcs parent = do
+  model &lt;- listStoreNew (initModel)
+  view  &lt;- treeViewNewWithModel model
+  mapM 
+    ( \(title, func) -&gt; newcol view model title func )
+    ( zip titles funcs )
+  set view [ widgetCanFocus := False ]
+  boxPackStart parent view PackNatural 3
+  return model
+  where
+    newcol view model title func = do
+      renderer &lt;- cellRendererTextNew
+      col &lt;- treeViewColumnNew
+      cellLayoutPackStart col renderer True
+      cellLayoutSetAttributes col renderer model (
+        \row -&gt; [ cellText := func row])
+      treeViewColumnSetTitle col title
+      treeViewAppendColumn view col
+</code></pre>
+
+<p>Solutekstien muotoilemiseen on erinäinen määrä apufunktioita, joiden toimintalogiikkaan ei tässä vaiheessa kannattane kiinnittää suurempaa huomiota:</p>
+
+<pre><code>rErrorPros rR = 
+  f02p (errorPros (rErrs rR) (rMrks rR))
+
+iErrorPros iV = 
+  f02p (errorPros (iErrs iV) (iMrks iV))
+
+errorPros errs mrks 
+  | errs == 0 &amp;&amp; mrks == 0 = 0.0
+  | errs /= 0 &amp;&amp; mrks == 0 = 100.0
+  | otherwise = 100.0 * (intToDouble errs) / (intToDouble mrks)
+
+f01 :: Double -&gt; String
+f01 = printf "%.1f"
+
+f02p :: Double -&gt; String
+f02p = printf "%.2f%%"
+
+iSpeed mrks = 
+  f01 ((intToDouble mrks)* 60.0 / intToDouble iDuration)
+
+rSpeed mrks = 
+  f01 ((intToDouble mrks)* 60.0 / intToDouble rDuration)
+
+iStarts n
+  | n &lt;= 0    = "00:00"
+  | otherwise = mmss (fromIntegral (n*iDuration) :: Double)
+
+iEnds n = iStarts (n+1)
+
+mmss seconds =
+  leadingZero (show (floor seconds `div` 60)) ++ 
+  ":" ++ 
+  leadingZero (show (floor seconds `mod` 60))
+
+leadingZero s
+  | length s &lt; 2 = "0" ++ s
+  | otherwise    = s
+
+intToDouble :: Int -&gt; Double
+intToDouble i = fromRational (toRational i)
+</code></pre>
+
+<p>Ohjelman tuottama ikkuna näyttää nyt tältä:</p>
+
+<p><img src="../pics/Hatupist_011.png" alt="" /></p>
+
+<h1>Ohjelman tila</h1>
+
+<p>Ohjelma on kulloinkin yhdessä seuraavista tilosta:</p>
+
+<pre><code>data GameStatus = Error | Correct | Back | NotStarted
+  deriving (Eq, Show)
+</code></pre>
+
+<p><code>NotStarted</code>: Ohjelman käynnistyessä, kun yhtään merkkiä ei ole syötetty. Tilarivillä näytetään teksti &ldquo;Voit aloittaa&rdquo;. Tulostaulut näyttävät nollaa, eikä ajastinta ole käynnistetty.</p>
+
+<p><code>Correct</code>: Käyttäjä on kirjoittanut tekstiä, ja teksti on oikein. Näppäimistönpainallukset rekisteröidään.</p>
+
+<p><code>Error</code>: Käyttäjä on lyönyt virhelyönnin. Virhe rekisteröidään ja käyttäjää pyydetään korjaamaan virheet. Ohjelma on tässä tilassa siihen saakka kunnes teksti on jälleen oikein, jolloin siirrytään takaisin tilaan <code>Correct</code>.</p>
+
+<p><code>Back</code>: Teksti on oikein, mutta käyttäjä (jostain syystä) poistaa merkkejä. Näppäimistönpainalluksista ei tällöin synny rekisteröitävää tietoa.</p>
+
+<p>Tila määräytyy tapahtumankäsittelijässä <code>whenEntryChanged</code>. Samalla vanha tila otetaan talteen. Vanha tila <code>oldStatus</code> saa arvon nykyiseltä tilalta <code>status</code>.</p>
+
+<pre><code>whenEntryChanged gsRef = do
+  pt  &lt;- getPOSIXTime
+  gs  &lt;- readIORef gsRef
+  txt &lt;- entryGetText (gEntry (g gs))
+  let label1Str = head (oLabelStrs gs)
+      status = getStatus txt label1Str (oldlen gs)
+      f = case (status,oldStatus gs) of
+        (_,NotStarted)  -&gt; whenNotStarted status
+        (Correct,_)     -&gt; whenCorrect txt
+        (Error,Correct) -&gt; whenNewError
+        otherwise       -&gt; whenOther status (oldStatus gs)
+      cprfix = length (commonPrefix txt label1Str)
+  newGs &lt;- f pt gsRef gs
+  set (gLabel1 (g gs)) [ 
+    labelLabel := blankStart cprfix label1Str]
+  writeIORef gsRef newGs {
+    oldStatus = status,
+    oldlen = max cprfix (oldlen gs),
+    nextLetter = nextChar cprfix label1Str
+  }
+  drawStatusText gsRef
+  widgetQueueDraw (gErrorCanvas  (g gs))
+  widgetQueueDraw (gHelperCanvas (g gs))
+  when (label1Str == txt) (advanceLine gsRef newGs)
+  return ()
+
+whenNotStarted status gui settings lines gsRef gs = do
+  putStrLn ("Started with " ++ (show status))
+  return ()
+
+whenCorrect gui settings lines gsRef gs = do
+  print "Correct."
+  return ()
+
+whenNewError gui settings lines gsRef gs = do
+  print "New Error."
+  return ()
+
+whenOther status oldStatus gui settings lines gsRef gs = do
+  putStrLn ("Other with " ++ (show (status,oldStatus)))
+  return ()
+</code></pre>
+
+<p>Tyypillinen tuloste kokeiltaessa edellistä näyttää tältä:</p>
+
+<pre><code>(Correct,NotStarted,"M")
+Started with Correct
+(Correct,Correct,"Mo")
+"Correct."
+(Error,Correct,"Mou")
+"New Error."
+(Back,Error,"Mo")
+Other with (Back,Error)
+(Correct,Back,"Mor")
+"Correct."
+(Back,Correct,"Mo")
+Other with (Back,Correct)
+</code></pre>
+
+<h1>Rivinvaihto</h1>
+
+<p>Jotta komponenttien välittäminen funktion parametreina onnistuisi helpommin, keräämme välitettävät komponentit yhteen tietorakenteeseen.</p>
+
+<pre><code>data GUI = GUI {
+  gEntry :: Entry,
+  gLabel1, gLabel2 :: Label
+}
+</code></pre>
+
+<p>Asetukset ovat tietorakenteessa <code>Settings</code>, niitä ei tässä vaiheessa ole montaa.</p>
+
+<pre><code>data Settings = Settings {
+  lineLen :: Int, startLine :: Int,
+  textfile :: String
+} deriving (Read, Show)
+</code></pre>
+
+<p>Asetukset saavat oletusarvonsa funktiossa <code>defaultSettings</code>.</p>
+
+<pre><code>defaultSettings = Settings {
+  lineLen = 40, startLine = 0,
+  textfile = "morse.txt"
+}
+</code></pre>
+
+<p>Näkyvissä olevat tekstirivit saadaan yksinkertaisella funktiolla <code>labelStrings</code>, joka palauttaa kahden rivin taulukon.</p>
+
+<pre><code>labelStrings :: Int -&gt; [String] -&gt; [String]
+labelStrings startline lines =
+  [lines !! first] ++ [lines !! second]
+  where
+    first = startline `mod` (length lines)
+    second = (startline + 1) `mod` (length lines)
+</code></pre>
+
+<p>Kun tekstikentän sisältö muuttuu, tarkistetaan se tapahtumankäsittelijässä <code>whenEntryChanged</code> ja sen saavuttaessa saman arvon kuin kirjoitettavana oleva tekstirivi, vaihdetaan se uuteen funktiolla <code>advanceLine</code>.</p>
+
+<pre><code>whenEntryChanged gui lines gsRef = do
+  gs  &lt;- readIORef gsRef
+  txt &lt;- entryGetText (gEntry gui)
+  let label1Str = head (oLabelStrs gs)
+  when (label1Str == txt) (advanceLine gui lines gsRef gs)
+  return ()
+</code></pre>
+
+<p>Funktio advanceLine lisää tilamuuttujassa olevan nykyisen rivinumeron <code>currentLine</code> arvoa yhdellä. Kun tiedostossa ei ole enää uusia rivejä kirjoitettavaksi, aloitetaan uudelleen alusta. Tämä tapahtuu pitämällä rivinumero annetuissa rajoissa jakojäännösfunktion <code>mod</code> avulla.</p>
+
+<pre><code>advanceLine gui lines gsRef gs = do
+  writeIORef gsRef gs {
+    currentLine = ncline
+  }
+  renewLabels gui ncline lines gsRef
+  return ()
+  where
+    ncline = ((currentLine gs) + 1) `mod` (length lines)
+</code></pre>
+
+<p>Ohjelman tulostama ikkuna:</p>
+
+<p><img src="../pics/linefeed.png" alt="" /></p>
+
+<p>Lähdekoodi <a href="../code/linefeed.hs">linefeed.hs</a></p>
+
+<h1>Ajanottoa</h1>
+
+<p>Intervallit eli kolmenkymmenen sekunnin jaksot on siis määritelty tietorakenteessa <code>Interval</code>, ja alustamaton oletusintervalli on nimeltään <code>zeroInterval</code>, sen tuntee numerosta -1. Lyöntimäärät ja virheet lasketaan kenttiin <code>iMrks</code> ja <code>iErrs</code>.</p>
+
+<pre><code>data Interval = Interval {
+  iNum, iMrks, iErrs :: Int 
+} deriving Show
+
+zeroInterval = Interval {
+  iNum = -1, iMrks = 0, iErrs = 0 }
+</code></pre>
+
+<p>Tietorakenteeseen <code>State</code> lisätään aloitusaikaa kuvaava kenttä <code>startTime</code>, joka alustetaan epämääräiseen nolla-aikaan vuoteen 1970.</p>
+
+<pre><code>data State = State {
+  status :: GameStatus,
+  startTime :: POSIXTime,
+  ...
+
+initState = State {
+  startTime = fromIntegral 0 :: POSIXTime,
+  oldStatus = NotStarted,
+  ...
+</code></pre>
+
+<p>Kun lyönnin aika <code>t</code> sekunteina tunnetaan, saadaan intervallin numero, johon lyönti kuuluu, yksinkertaisella funktiolla:</p>
+
+<pre><code>intervalNumber t =
+  floor t `div` iDuration
+</code></pre>
+
+<p><code>POSIXtime</code>-tyyppi (ja jatkossa lyhenne <code>pt</code>) on kellonaika alkaen vuodesta 1970 sekunteina, joten se käy sekuntimäärien vertailemiseen yksinkertaisella tyyppimuunnoksella:</p>
+
+<pre><code>secondsFrom startPt endPt =
+  a - b
+  where
+    a = ptToDouble endPt
+    b = ptToDouble startPt
+
+ptToDouble :: POSIXTime -&gt; Double
+ptToDouble t  = fromRational (toRational t)
+intToDouble :: Int -&gt; Double
+intToDouble i = fromRational (toRational i)
+</code></pre>
+
+<p>Tässä funktiot <code>fromRational</code> ja <code>toRational</code> ovat esimerkkejä tyyppiluokkien mukaan kuormitetuista funktioista, eli ne tekevät muunnoksen annettujen tyyppimäärittelyjen mukaisesti.</p>
+
+<p>Puskurin muutoksiin vastaava koodi on nyt seuraavassa muodossa:</p>
+
+<pre><code>whenEntryChanged gui settings lines gsRef = do
+  pt  &lt;- getPOSIXTime
+  gs  &lt;- readIORef gsRef
+  txt &lt;- entryGetText (gEntry gui)
+  let label1Str = head (oLabelStrs gs)
+      status = getStatus txt label1Str (oldlen gs)
+      f = case (status,oldStatus gs) of
+        (_,NotStarted)  -&gt; whenNotStarted status
+        (Correct,_)     -&gt; whenCorrect
+        (Error,Correct) -&gt; whenNewError
+        otherwise       -&gt; whenOther status (oldStatus gs)
+  newgs &lt;- f gui settings pt gs
+  writeIORef gsRef newgs {
+    oldStatus = status,
+    oldlen = max (length (commonPrefix txt label1Str)) (oldlen gs)
+  }
+  when (label1Str == txt) (advanceLine gui lines gsRef gs)
+  return ()
+
+whenNotStarted status gui settings pt gs = do
+  putStrLn ("Started with " ++ (show status))
+  return gs { 
+    startTime = pt 
+  }
+
+whenCorrect gui settings pt gs = do
+  print "Correct."
+  let s = secondsFrom (startTime gs) pt
+      i = intervalNumber s
+  print (s,i)
+  return gs
+
+whenNewError gui settings pt gs = do
+  print "New Error."
+  return gs
+
+whenOther status oldStatus gui settings pt gs = do
+  putStrLn ("Other with " ++ (show (status,oldStatus)))
+  return gs
+</code></pre>
+
+<p>Nyt naksuteltaessa noin yhden merkin viidessä sekunnissa, saatiin seuraava tuloste, josta näkyy kulunut sekuntimäärä ja intervalli, johon näppäimistönpainallus kuuluu:</p>
+
+<pre><code>$ runhaskell timing.hs 
+Started with Correct
+"Correct."
+(3.952288866043091,0)
+"Correct."
+(9.909076929092407,0)
+"Correct."
+(15.482538938522339,0)
+"Correct."
+(20.866790771484375,0)
+"Correct."
+(26.18815588951111,0)
+"Correct."
+(31.308336973190308,1)
+"Correct."
+(36.21953082084656,1)
+</code></pre>
+
+<p>Ohjelmakoodi <a href="../code/../code/timing.hs">timing.hs</a></p>
+
+<p>Ensi kerralla käytämme tätä hyväksi, ja keräämme nämä tiedot niitä vastaaviin tietorakenteisiin.</p>
+
+<h1>Ajanotosta tulostauluihin</h1>
+
+<p>Jotta tulostaulujen sisältöä päästään muuttamaan, tarvitaan siis viitteet näiden taulujen malleihin:</p>
+
+<pre><code>data GUI = GUI {
+  gEntry :: Entry,
+  gLabel1, gLabel2 :: Label,
+  gModelR :: ListStore Result,
+  gModelS :: ListStore Timing,
+  gModelI :: ListStore Interval
+}
+</code></pre>
+
+<p>Nämä viitteet luotiin funktiossa <code>createGUI</code>:</p>
+
+<pre><code>  rModel &lt;- setupView rInitModel rColTitles rColFuncs innerVBox1
+  sModel &lt;- setupView sInitModel sColTitles sColFuncs innerVBox1
+  iModel &lt;- setupView iInitModel iColTitles iColFuncs innerVBox2
+  ...
+  return GUI {
+    gEntry = entry,
+    gLabel1 = label1, gLabel2 = label2,
+    gModelR = rModel, gModelS = sModel, gModelI = iModel
+  }
+</code></pre>
+
+<p>S-taulun ainoa rivi (rivinumero 0) päivitetään nyt funktiolla <code>listStoreSetValue</code>. Sen parametrit ovat viite malliin (<code>gModelS gui</code>), rivinumero ja tietorakenne <code>Timing</code>, joka sisältää näytettävien kenttien saamat arvot.</p>
+
+<pre><code>renewTableS gui gs t = do
+  listStoreSetValue (gModelS gui) 0 Timing {
+    sSecsLeft = iLeft t,
+    sSession = mmss t,
+    sTotal = total gs,
+    sSpeed = 0.0
+  }
+</code></pre>
+
+<p>Ensimmäisen näppäimistönpainalluksen seurauksena kutsuttavaan funktioon <code>whenNotStarted</code> on lisätty komento <code>timeoutAdd</code>, joka käynnistää ajastimen.</p>
+
+<pre><code>whenNotStarted status gui settings lines pt gsRef gs = do
+  putStrLn ("Started with " ++ (show status))
+  timeoutAdd (onTimeout gui gsRef) 500
+</code></pre>
+
+<p>Ajastimen toiminta määritellään seuraavassa:</p>
+
+<pre><code>onTimeout gui gsRef = do
+  gs &lt;- readIORef gsRef
+  pt &lt;- getPOSIXTime
+  let t = secondsFrom (startTime gs) pt
+      iCur = iNumber t
+  renewTables gui gs t iCur
+  writeIORef gsRef gs {
+    lastShownIv = iCur
+  }
+  return True
+</code></pre>
+
+<p>Pienet apufunktiot <code>iNumber</code> ja <code>iLeft</code> kertovat jakson numeron ja paljonko jaksossa on sekunteja jäljellä.</p>
+
+<pre><code>iNumber t =
+  floor t `div` iDuration
+
+iLeft t =
+  iDuration - (floor t `mod` iDuration)
+</code></pre>
+
+<p>Tilastoitavat näppäimistönpainallukset kerätään oikeisiin intervalleihin funktiossa <code>addTime</code>:</p>
+
+<pre><code>addTime status i intervals =
+  [newHead] ++ tail newIvs
+  where
+  newHead = case status of
+    Correct -&gt; headIv { iMrks = (iMrks headIv) + 1 }
+    Error   -&gt; headIv { iErrs = (iErrs headIv) + 1 }
+  headIv = head newIvs
+  newIvs = if i /= latestIvNum intervals
+    then [zeroInterval { iNum = i }] ++ intervals
+    else intervals
+</code></pre>
+
+<p>Käytännössä nämä muodostavat kasvavan taulukon, jossa kenttä <code>iNum</code> kertoo jakson numeron, ja kentät <code>iMrks</code> ja <code>iErrs</code> lyöntimäärät ja virheet seuraavaan tapaan:</p>
+
+<pre><code>[Interval {iNum = 1, iMrks = 9, iErrs = 0},Interval {iNum = 0, iMrks = 68, iErrs = 2}]
+</code></pre>
+
+<p><img src="../pics/timing-02.png" alt="" /></p>
+
+<p>Jatkamme tulostietojen käsittelemistä ensi kerralla. Ohjelmakoodi tähän mennessä <a href="../code/timing-02.hs">timing-02.hs</a></p>
+
+<h1>Tulostaulut R, S ja I</h1>
+
+<p><img src="../pics/result-tables-02.png" alt="" /></p>
+
+<p>Tulostauluja on siis kolme, näistä istunnon S-taulu päivitetään puolen sekunnin välein. Kaksi muuta taulua päivitetään, kun siirrytään intervallista toiseen. Monadin sisällä tämä ehtolause ei ole kovin selkeästi luettava, mutta se on seuraavassa:</p>
+
+<pre><code>renewTables gui gs t iCur = do
+  renewTableS gui gs t 
+  newGs &lt;- if (lastShownIv gs /= iCur)
+  then renewSeldomTables gui gs iCur
+  else return gs
+  return newGs
+</code></pre>
+
+<p>Intervallien I-taulun päivityksen yhteydessä lasketaan kahden minuutin tulos ja siivotaan pois tarpeettomat intervallit:</p>
+
+<pre><code>renewTableI gui gs iCur = do
+  mapM 
+    (\(a,b) -&gt; listStoreSetValue (gModelI gui) (amountOfIntervals-a) b) 
+    (zip [1..] showIvs)
+  return gs {
+    intervals = newIvs,
+    lastShownIv = iCur,
+    results = [zeroResult {
+       rMrks = sum [iMrks g | g &lt;- showIvs]
+    }]
+  }
+  where
+    iMaxShow = iCur - 1
+    infimum = iMaxShow - amountOfIntervals + 1
+    iMinShow = max 0 infimum
+    iMinNeed = max 0 (infimum + 1)
+    newIvs = ivsFrom iMinNeed (intervals gs)
+    showIvs = reverse (ivsAllBetween iMinShow iMaxShow (intervals gs))
+</code></pre>
+
+<p>Näytettävien intervallien alaraja on muuttuja <code>iMinShow</code> ja yläraja <code>iMaxShow</code>. Seuraavaan kertaan näistä ei tarvitse säilyttää alarajan intervallia, joten tarvittavien intervallien alaraja <code>iMinNeed</code> on yhden korkeampi. Uudet intervallit ovat nyt siis taulukossa <code>newIvs</code> ja näytettävät intervallit taulukossa <code>showIvs</code>. Kahden minuutin tulos saadaan laskemalla merkkimäärät näytettävistä intervalleista kaavalla</p>
+
+<pre><code>rMrks = sum [iMrks g | g &lt;- showIvs]
+</code></pre>
+
+<p>Tässä vaiheessa heitämme tuon laskun tuloksen yksinkertaisesti tulosten R-taulun alimmalle riville:</p>
+
+<pre><code>latestResult results = if null results 
+  then zeroResult
+  else head results
+
+renewTableR gui gs iCur = do
+  listStoreSetValue (gModelR gui) 2 (latestResult (results gs))
+  return ()
+</code></pre>
+
+<p>Pienet apufunktiot, joita käytämme intervallien suodattamiseen, ovat esitettynä seuraavassa. Intervalleihin ei taltioidu nollatuloksia, mutta I-taulussa ne halutaan näyttää, ja tästä syystä määrittelemme funktiot <code>ivsAllBetween</code> ja <code>ivExactly</code>.</p>
+
+<pre><code>ivsBetween iMin iMax ivs =
+  filter (\iv -&gt; iMin &lt;= (iNum iv) &amp;&amp; (iNum iv) &lt;= iMax) ivs
+
+ivsFrom iMin ivs =
+  filter (\iv -&gt; iMin &lt;= (iNum iv)) ivs
+
+ivsAllBetween iMin iMax ivs =
+  [ivExactly n ivs | n &lt;- [iMin .. iMax]]
+
+ivExactly n ivs =
+  case find (\iv -&gt; n == (iNum iv)) ivs of
+    Just x  -&gt; x
+    Nothing -&gt; zeroInterval { iNum = n }
+</code></pre>
+
+<p>Kirjoitusnopeus kauniissa muodossa merkkijonona esitettynä saatiin jakamalla merkkimäärä aikavälin pituudella (mrk/min, jossa 1min=60.0s).</p>
+
+<pre><code>rSpeed mrks = 
+  f01 ((intToDouble mrks)* 60.0 / intToDouble rDuration)
+</code></pre>
+
+<p>Funktiota <code>addTime</code> on myös hieman muutettu. Se sisältää nyt tarkistuksen tyhjän taulukon varalta.</p>
+
+<pre><code>addTime status i intervals =
+  [newHead] ++ tail newIvs
+  where
+  newHead = case status of
+    Correct -&gt; headIv { iMrks = (iMrks headIv) + 1 }
+    Error   -&gt; headIv { iErrs = (iErrs headIv) + 1 }
+  headIv = head newIvs
+  newIvs = if null intervals || i /= latestIvNum intervals
+    then [zeroInterval { iNum = i }] ++ intervals
+    else intervals
+</code></pre>
+
+<p>Ohjelmakoodi: <a href="../code/result-tables-02.hs">result-tables-02.hs</a></p>
+
+<h1>Tulosten vertailua</h1>
+
+<p>Laskimme edellisellä kerralla intervallit, joilla on merkitystä tuloksen määräytymisessä. Nyt käytämme näiden intervallien taulukkoa parametrina, ja laskemme kyseisen tuloksen:</p>
+
+<pre><code>addResult showIvs gs = do
+  pt &lt;- getPOSIXTime
+  tz &lt;- getCurrentTimeZone
+  let newResult0 = zeroResult {
+    rDate  = timeFormatted (utcToZonedTime tz (posixSecondsToUTCTime pt)),
+    rMrks = sum [iMrks g | g &lt;- showIvs],
+    rErrs = sum [iErrs g | g &lt;- showIvs]
+  }
+  let newResult = newResult0 {
+    rRank = tellRank newResult0 (results gs)
+  }
+  let 
+    newRs = take maxRank (insert newResult (results gs))
+    newShownRs = [
+      bestResult newRs,
+      (sessionBest gs) `min` newResult,
+      newResult ]
+  return (newRs, newShownRs)
+
+timeFormatted :: ZonedTime -&gt; String
+timeFormatted = formatTime defaultTimeLocale "%Y-%m-%d %H:%M:%S"
+
+tellRank x xs =
+  case findIndex (x &lt;=) xs of
+    Just n  -&gt; n + 1
+    Nothing -&gt; length xs + 1
+</code></pre>
+
+<p>Muuttuja <code>newResult0</code> on päivämäärän, merkkimäärän ja virhemäärän sisältävä nimetty tietue. Sitä tarvitaan välituloksena, jotta voimme selvittää mille sijalle tuloksissa saavutettu kirjoitusnopeus sijoittuu. Muuttuja <code>newResult</code> on vastaava tietue, johon on lisätty kyseinen sijoitus, <code>rRank</code>. Sijoitus saadaan funktiosta <code>tellRank</code>. Tulostauluun määrittelemme tilaa viidelletuhannelle tulostietueelle. Uusi tulos lisätään oikeaan kohtaan taulukkoon <code>newRs</code>, ja tämän jälkeen taulukko typistetään tulostaulun maksimipituuteen.</p>
+
+<p>Tulosten vertaileminen toisiinsa perustuu tyyppiluokkien <code>Eq</code> ja <code>Ord</code> hyväksikäyttöön. Kirjastosta <code>List</code> löytyy koko joukko funktioita, jotka osaavat käyttää tätä ominaisuutta hyväksi, esimerkiksi funktio <code>insert</code>.  Luomme tietorakenteelle <code>Result</code> instanssin näihin tyyppiluokkiin. Tuloksia kohdellaan samana, mikäli niiden merkkimäärä ja päivämäärä ovat samat. Samaan merkkimäärään päädyttäessä aikaisemmin saavutettua tulosta pidetään parempana verrattuna myöhemmin saavutettuun. Virhemäärä on mukana ainoastaan informaation vuoksi.</p>
+
+<pre><code>data Result = Result { 
+  rDate :: String, 
+  rMrks, rRank, rErrs :: Int
+} deriving (Read, Show)
+
+instance Eq Result where
+  (Result date1 mrks1 rnk1 errs1) == (Result date2 mrks2 rnk2 errs2) =
+    mrks1 == mrks2 &amp;&amp; date1 == date2
+
+instance Ord Result where
+  compare = fasterFst
+
+fasterFst (Result date1 mrks1 rnk1 errs1) (Result date2 mrks2 rnk2 errs2) =
+  if mrks1 /= mrks2 
+    then mrks2 `compare` mrks1
+    else date1 `compare` date2 
+</code></pre>
+
+<p>Funktio <code>addResult</code> palauttaa päivitetyn tulostaulun lisäksi toisena tietueen alkiona taulukon <code>newShownRs</code>, johon on laskettuna kolme erityistä tulosta näytettäväksi ruudulla:</p>
+
+<pre><code>    newShownRs = [
+      bestResult newRs,
+      (sessionBest gs) `min` newResult,
+      newResult ]
+
+bestResult results = if null results 
+  then zeroResult
+  else head results
+</code></pre>
+
+<p>Ensimmäinen näistä on kaikkien aikojen paras tulos, toinen istunnon paras tulos ja kolmas viimeisin tulos. Näistä kaikkien aikojen paras tulos on sama kuin istunnon paras tulos, sillä emme toistaiseksi lainkaan tallenna tuloksia. Myös tässä funktio <code>min</code> käyttää hyväksi järjestysominaisuutta, joka on seurausta tyyppiluokkiin <code>Eq</code> ja <code>Ord</code> kuulumisesta.</p>
+
+<p>Jätimme aikaisemmin toteuttamatta S-taulun sarakkeen &ldquo;Jaksonopeus&rdquo; laskemisen. Tulin ajatelleeksi, että ehkä sittenkin laskemme tuohon sarakkeeseen hetkellisen nopeuden kymmenen viimeisen sekunnin osalta. Muutamme S-taulun päivitysalgoritmia saadaksemme tarvittavat tiedot talteen:</p>
+
+<pre><code>renewTableS gui gs t = do
+  pt &lt;- getPOSIXTime
+  let newGs = gs {
+    speedNows = [(pt, (total gs))] ++ take speedCount (speedNows gs)
+  }
+  let s = difs (speedNows newGs)
+  listStoreSetValue (gModelS gui) 0 Timing {
+    sSecsLeft = iLeft t,
+    sSession = mmss t,
+    sTotal = total gs,
+    sSpeed = speed (snd s) (fst s)
+  }
+  putStrLn (show (snd s) ++ " merkkiä " ++ f01 (fst s) ++ " sekunnissa")
+  return newGs
+</code></pre>
+
+<p>Tässä <code>speedNows gs</code> on taulukko, johon keräämme kellonajan ja kellonaikaa vastaavan kokonaismerkkimäärän <code>total gs</code>. Kun nyt laskemme näiden kunkin erotuksen taulukon alusta ja lopusta, saamme hetkellisen kirjoitusnopeuden:</p>
+
+<pre><code>difs speds = 
+  if null speds
+    then (0.0, 0)
+    else (secondsFrom (fst start) (fst end), (snd end) - (snd start))
+  where
+    start  = last speds
+    end    = head speds
+
+speed mrks t = 
+  (intToDouble mrks) * 60.0 / (max t 1.0)
+</code></pre>
+
+<p>Olemme tässä jälleen käyttäneet epämääräisiä keinoja huolehtimaan, ettei synny nollalla jakoa tai pään etsimistä tyhjästä listasta.</p>
+
+<p>Ohjelman ikkuna näyttää tässä vaiheessa seuraavalta:</p>
+
+<p><img src="../pics/result-tables-03.png" alt="" /></p>
+
+<p>Ohjelmakoodi tähän mennessä: <a href="../code/result-tables-03.hs">result-tables-03.hs</a></p>
+
+<h1>Kirjasin</h1>
+
+<p>Kirjasin muutetaan funktiossa <code>setFonts</code>, missä vaadittava parametri <code>fontstring</code> saa arvon &ldquo;monospace&rdquo;. Tekstin kokoa voi muuttaa lisäämällä merkkikoon, esimerkiksi &ldquo;monospace 12&rdquo;. Tasalevyistä kirjoituskonekirjasinta tarvitaan, jotta voimme tyhjentää merkkijonon välilyönneillä kun käyttäjä kirjoittaa sitä. Toinen vaihtoehto olisi piirtää merkkijonot itse, jolloin käyttäisimme funktiota <code>textExtents</code> selvittämään tyhjennettävän osuuden dimensiot. Tämä mahdollistaisi myös muiden kirjasimien käytön.</p>
+
+<pre><code>setFonts gui fontstring = do
+  srcfont &lt;- fontDescriptionFromString fontstring
+  widgetModifyFont (gLabel1 gui) (Just srcfont)
+  widgetModifyFont (gLabel2 gui) (Just srcfont)
+  widgetModifyFont (gEntry gui)  (Just srcfont)
+</code></pre>
+
+<p>Olkoon nyt <code>n</code> kirjoitettujen merkkien lukumäärä. Näytettävä merkkijono on tällöin <code>n</code> kappaletta välilyöntejä lisättynä merkkijonon häntään, joka jää jäljelle pudottamalla <code>n</code> merkkiä pois alusta:</p>
+
+<pre><code>blankStart n str =
+  replicate n ' ' ++ drop n str
+</code></pre>
+
+<p>Käytämme hyväksemme funktiota <code>commonPrefix</code>, ja teemme tarvittavat muutokset puskurin muutokseen vastaavaan tapahtumankäsittelijään <code>whenBufferChanged</code>:</p>
+
+<pre><code>commonPrefix (x:xs) (y:ys)
+  | x == y       = x : commonPrefix xs ys
+  | otherwise    = []
+commonPrefix _ _ = []
+
+cprfix = length (commonPrefix txt label1Str)
+
+  set (gLabel1 gui) [ 
+    labelLabel := blankStart cprfix label1Str]
+</code></pre>
+
+<h1>Tulosten tallentaminen</h1>
+
+<p>Ohjelman peruslogiikka alkaa olla valmiina, kunhan vielä tallennamme tulokset. Olemme aikaisemmin määritelleet tulostietotyypin periytymään tyyppiluokista <code>Show</code> ja <code>Read</code>, joten tietorakenteen lukeminen ja kirjoittaminen on automaattista. Periaattessa tulokset luetaan yksinkertaisten funktioiden <code>readFile</code> ja <code>read</code> avulla.</p>
+
+<p>Vanhoja tuloksia lukiessamme saatamme todennäköisesti törmätä kahteen ongelmaan: tulostiedostoa ei ole olemassa tai tulostiedot eivät ole jäsenneltävässä muodossa. Kirjastosta <code>Control.Exception</code> löytyy funktio <code>catch</code>, joka todennäköisesti on yksinkertaisin mahdollinen virheenhallintaan soveltuva funktio. Se saa ensimmäisenä parametrinaan suoritettavan funktion, pyrkii suorittamaan sen, ja poikkeuksen eli virheen sattuessa suorittaa toisena parametrina annetun funktion.</p>
+
+<p>Tiedoston sisältö luetaan ensin muuttujaan <code>content</code>. Tiedoston luvun epäonnistuessa oletetaan, että luettiin tyhjä merkkijono <code>""</code>. Virheen laadusta emme tässä tapauksessa ole kiinnostuneita.</p>
+
+<pre><code>  content &lt;- readFile fname `catch` 
+    \(SomeException e) -&gt; return ""
+</code></pre>
+
+<p>Tiedoston sisältö jäsennetään nyt funktiolla <code>readRs</code>, jonka toteutus on standardi jäsennysfunktio <code>readIO</code>. Funktio <code>readIO</code> on kuormitettu funktio, joka tarvitsee tyyppimäärittelyn avulla tiedon siitä, minkätyyppiseen muotoon sen on yritettävä jäsentää merkkijono. Tässä tuo muoto on tyyppiä <code>Result</code> olevien alkioiden lista <code>[Result]</code>.</p>
+
+<pre><code>readRs :: String -&gt; IO [Result]
+readRs = readIO
+</code></pre>
+
+<p>Mikäli merkkijonon <code>content</code> jäsentäminen ei funktiolla <code>pFunc</code> onnistu, palautetaan operaation nolla-alkio, joka tässä tapauksessa on tyhjä lista <code>[]</code>.</p>
+
+<pre><code>  result &lt;- pFunc content `catch` 
+    \(SomeException e) -&gt; return zero
+</code></pre>
+
+<p>Edellä käsitelty on koottuna seuraavassa:</p>
+
+<pre><code>resultsFromFile  fname = do
+  structFromFile fname readRs []
+
+structFromFile fname pFunc zero = do
+  content &lt;- readFile fname `catch` 
+    \(SomeException e) -&gt; return ""
+  result &lt;- pFunc content `catch` 
+    \(SomeException e) -&gt; return zero
+  return result
+
+readRs :: String -&gt; IO [Result]
+readRs = readIO
+
+resultsFile  = "results.txt"
+</code></pre>
+
+<p>Kaikenkaikkiaan alustustietojen luomiseen ja lukemiseen käytettävä funktio <code>getStartupConfig</code> näyttää tässä vaiheessa seuraavalta. Oletuksena on, että ohjelman käyttämät tiedostot tallennetaan vastedes piilohakemistoon &ldquo;/home/user/.hatupist/&rdquo;, joka luodaan, jollei sitä ole:</p>
+
+<pre><code>getStartupConfig gui gsRef = do
+  gs &lt;- readIORef gsRef
+  -- directory
+  homedir &lt;- getHomeDirectory
+  let dir = homedir ++ "/.hatupist"
+  createDirectoryIfMissing False (dir)
+  -- savedResults
+  let rname = dir ++ "/" ++ resultsFile
+  oldResults &lt;- resultsFromFile rname
+  putStrLn ("Reading " ++ rname ++ ": " ++ show (length (oldResults)) ++ " rows")
+  listStoreSetValue (gModelR gui) 0 (bestResult oldResults)
+  -- other
+  setFonts gui "monospace"
+  writeIORef gsRef gs {
+    homeDirectory = dir,
+    results = oldResults
+  }
+
+resultsFile = "results.txt"
+</code></pre>
+
+<p>Vastaavasti tulokset tallennetaan ohjelman päättyessä funktioiden <code>writeFile</code> ja <code>show</code> avulla:</p>
+
+<pre><code>quitProgram gsRef = do
+  print "Quitting."
+  gs &lt;- readIORef gsRef
+  let rname = (homeDirectory gs) ++ "/" ++ resultsFile
+  writeFile rname (show (results gs))
+  putStrLn ("Saving " ++ rname)
+  mainQuit
+</code></pre>
+
+<p>Ohjelmakoodi tähän mennessä: <a href="../code/savedResults-01.hs">savedResults-01.hs</a></p>
+
+<h1>Parametrit tietorakenteena</h1>
+
+<p>Kun siirrämme graafisen käyttöliittymän, asetukset ja tekstirivit tietorakenteeseen <code>State</code>, vähenevät välitettävät parametrit funktiokutsuissa ja ohjelmasta tulee luettavampi.</p>
+
+<p>Esimerkiksi funktio</p>
+
+<pre><code>whenEntryChanged gui settings lines gsRef 
+</code></pre>
+
+<p>voidaan esittää muodossa</p>
+
+<pre><code>whenEntryChanged gsRef 
+</code></pre>
+
+<p>Tietorakenne State sisältää nyt muun muassa seuraavat kentät:</p>
+
+<pre><code>data State = State {
+  textLines :: [String],
+  speedNows :: [(POSIXTime, Int)],
+  intervals :: [Interval],
+  results :: [Result],
+  settings :: Settings,
+  gui :: GUI
+}
+</code></pre>
+
+<p>Tämän lisäksi määrittelemme lyhennysmerkinnät</p>
+
+<pre><code>s gs = settings gs
+g gs = gui gs
+r gs = results gs
+</code></pre>
+
+<p>Voimme nyt kutsua tietorakenteen <code>State</code> sisältämiä kenttiä seuraavaan tapaan:</p>
+
+<pre><code>textfile (s gs)
+lineLen (s gs)
+gModelR (g gs)
+gEntry (g gs)
+...
+</code></pre>
+
+<p>Piilotamme määrittelyn <code>Settings</code> kirjastosta <code>Graphics.UI.GTK</code>, koska haluamme käyttää sitä muihin tarkoituksiin.</p>
+
+<pre><code>import Graphics.UI.Gtk hiding (Settings)
+</code></pre>
+
+<h1>Päävalikko</h1>
+
+<p>Luomme ohjelmaan myös valikon, josta voi valita kirjoitettavan tiedoston, kirjasimen, asettaa muita asetuksia, nähdä tulosten kehitys ja lopettaa ohjelman. Tietoja-valikko eli tulosten kehitys jätetään toistaiseksi toteuttamatta, eli se on <code>noop</code>. Päävalikon valintamahdollisuudet on kerätty standardivalikkoteksteinä, joten ne suomentuvat ja saavat oikean kuvakkeen automaattisesti.</p>
+
+<p><img src="../pics/menubar.png" alt="" /></p>
+
+<pre><code>menuBarDescr = 
+  [("_Tiedosto", 
+    [("gtk-open", openFile),
+     ("gtk-select-font", openFont),
+     ("gtk-preferences", setPreferences),
+     ("gtk-about", noop),
+     ("gtk-quit", quitProgram)])
+  ]
+
+createMenuBar descr gsRef = do 
+  bar &lt;- menuBarNew
+  mapM_ (createMenu bar) descr
+  return bar
+  where
+    createMenu bar (name,items) = do 
+      menu &lt;- menuNew
+      item &lt;- menuItemNewWithLabelOrMnemonic name
+      menuItemSetSubmenu item menu
+      menuShellAppend bar item
+      mapM_ (createMenuItem menu) items
+    createMenuItem menu (stock,action) = do 
+      item &lt;- imageMenuItemNewFromStock stock
+      menuShellAppend menu item
+      onActivateLeaf item (do action gsRef)
+    menuItemNewWithLabelOrMnemonic name
+      | elem '_' name = menuItemNewWithMnemonic name
+      | otherwise     = menuItemNewWithLabel name
+
+noop gsRef = do
+  return ()
+</code></pre>
+
+<h1>Kirjasindialogi</h1>
+
+<p>Kirjasin vaihdetaan valitsemalla päävalikosta kirjasindialogi. Kirjasindialogi on yksinkertainen ikkuna, jossa käyttäjältä kysytään uuden kirjasimen tiedot.</p>
+
+<pre><code>openFont gsRef = do
+  gs &lt;- readIORef gsRef
+  result &lt;- chooseFont "Valitse kirjasin" (font (s gs))
+  case result of
+    Just newFont -&gt; do
+      writeIORef gsRef gs {
+        settings = (s gs) {
+          font = newFont }}
+      setFonts gsRef
+    otherwise -&gt; return ()
+
+chooseFont prompt oldFont = do
+  dialog &lt;- fontSelectionDialogNew prompt
+  fontSelectionDialogSetFontName dialog oldFont
+  widgetShow dialog
+  response &lt;- dialogRun dialog
+  print response
+  case response of
+    ResponseOk -&gt; do
+      fn &lt;- fontSelectionDialogGetFontName dialog
+      widgetDestroy dialog
+      return fn
+    ResponseCancel -&gt; do
+      widgetDestroy dialog
+      return Nothing
+    ResponseDeleteEvent -&gt; do
+      widgetDestroy dialog
+      return Nothing
+    _ -&gt; return Nothing
+</code></pre>
+
+<p>Aikaisemmin huomiotta jäänyt asia on, että vanhojen tulosten sijoitukset luonnollisesti muuttuvat kun uusia syntyy. Tulokset on siis järjestettävä uudelleen:</p>
+
+<pre><code>reRank1 (Result { rDate = a, rMrks = b, rRank = c, rErrs = d }, newRank) =
+  Result { rDate = a, rMrks = b, rRank = newRank, rErrs = d }
+
+reRank rs = map reRank1 (zip rs [1..])
+</code></pre>
+
+<p>Ohjelmakoodi kokonaisuudessaan: <a href="../code/settings.hs">settings.hs</a></p>
+
+<h1>Virheraidoitus</h1>
+
+<p>Lisätään piirtoalue <code>gErrorCanvas</code> tyyppiä <code>DrawingArea</code> virheestä ilmoittavaa piirrosta varten graafisen käyttöliittymän tietotyyppiin kentäksi.</p>
+
+<pre><code>data GUI = NotCreated | GUI {
+  gErrorCanvas :: DrawingArea,
+  gEntry :: Entry,
+  gLabel1, gLabel2 :: Label,
+  gModelR :: ListStore Result,
+  gModelS :: ListStore Timing,
+  gModelI :: ListStore Interval
+}
+</code></pre>
+
+<p>Luodaan tätä vastaava komponentti graafisen käyttöliittymän luonnin yhteydessä. Kun piirtoalue vaatii uudelleenpiirron, se kutsuu tapahtumankäsittelijää <code>onExpose</code>. Yhdistetään tapahtumankäsittelijä funktioon <code>drawErrorCanvas</code>.</p>
+
+<pre><code>  errorCanvas &lt;- drawingAreaNew
+  widgetSetSizeRequest errorCanvas 300 40
+  onExpose errorCanvas (
+    drawErrorCanvas gsRef errorCanvas)
+  boxPackStart outerVBox errorCanvas PackGrow 0
+</code></pre>
+
+<p>Funktio <code>drawErrorCanvas</code> määritellään seuraavassa. Kun ohjelman tila kertoo tapahtuneesta virheestä, kutsutaan funktiota <code>renderWithDrawable</code>. Muutoin näytetään ainoastaan tyhjä tausta, joka tapahtuu yksinkertaisesti palauttamalla totuusarvo <code>True</code>. Se kertoo käyttöliittymälle, että komponentti on piirretty eikä vaadi muita toimenpiteitä.</p>
+
+<pre><code>drawEmptyPicture canvas = do 
+  return True
+
+drawErrorCanvas gsRef widget _evt = do
+  gs &lt;- readIORef gsRef
+  drawWin &lt;- widgetGetDrawWindow widget
+  (wInt,hInt) &lt;- widgetGetSize widget
+  let (w,h) = (intToDouble wInt, intToDouble hInt)
+  if (oldStatus gs) /= Error
+    then drawEmptyPicture widget
+    else renderWithDrawable drawWin (drawErrorPicture w h)
+  return True
+</code></pre>
+
+<p>Kun tekstikentän sisältö muuttuu, on myös virhekanvaasin tila tarkistettava ja pyydettävä järjestelmältä sen uudelleenpiirtoa funktiolla <code>widgetQueueDraw</code>.</p>
+
+<pre><code>whenEntryChanged gsRef = do
+  ...
+  widgetQueueDraw (gErrorCanvas  (g gs))
+  when (label1Str == txt) (advanceLine gsRef newGs)
+  return ()
+</code></pre>
+
+<p>Varsinainen piirtäminen tapahtuu piirtokirjaston Cairo avulla. Piirtokomennot ovat tuttuja Cairon piirtokomentoja <code>moveTo</code>, <code>relLineTo</code>, <code>closePath</code>, <code>setSourceRGB</code> ja <code>fill</code>. Näiden avulla piirretään sinipunainen raidoitus.</p>
+
+<pre><code>blue   = (0.200, 0.400, 1.000)
+red    = (1.000, 0.200, 0.400)
+
+relPolygon (x,y) points (r,g,b) = do
+  moveTo x y
+  mapM (\(x,y) -&gt; relLineTo x y) points
+  closePath
+  setSourceRGB r g b
+  fill
+
+drawErrorPicture w h = do
+  let c = h
+      r = 15
+  mapM 
+    ( \(x,y,points,color) -&gt; relPolygon (x,y) points color)
+    [(x,0,[((-c),h),(r,0),(c,(-h))],
+     color) | (x,color) &lt;- zip [0,r..w+c] (cycle [blue,red])]
+  return True
+</code></pre>
+
+<p>Sinipunainen raidoitus ikkunassa näyttää tältä:</p>
+
+<p><img src="../pics/errorCanvas.png" alt="" /></p>
+
+<p>Ohjelmakoodi: <a href="../code/errorCanvas.hs">errorCanvas.hs</a></p>
+
+<h1>Tilarivi</h1>
+
+<p>Lisäämme graafisen käyttöliittymän tietotyyppiin kentän <code>gStatusbar</code>, joka on tyyppiä <code>Label</code>.</p>
+
+<pre><code>data GUI = NotCreated | GUI {
+  gErrorCanvas :: DrawingArea,
+  gEntry :: Entry,
+  gLabel1, gLabel2 :: Label,
+  gStatusbar :: Label,
+  gStyle :: Style,
+  gModelR :: ListStore Result,
+  gModelS :: ListStore Timing,
+  gModelI :: ListStore Interval
+}
+</code></pre>
+
+<p>Luomme tätä vastaavan komponentin funktiossa <code>CreateGUI</code>. Haluamme muuttaa tilarivin taustaväriä. Tyypin <code>Label</code> komponentti ei huolehdi itse taustaväristä, joten upotamme komponentin tapahtumalaatikkoon <code>eventbox</code>.</p>
+
+<pre><code>  statusbar &lt;- labelNew Nothing
+  miscSetAlignment statusbar 0 0
+  miscSetPadding   statusbar 6 0
+
+  eventbox &lt;- eventBoxNew
+  containerAdd eventbox statusbar
+  boxPackEnd extrmVBox eventbox PackNatural 0
+</code></pre>
+
+<p>Määrittelemme joukon värejä. Cairon piirtomallissa värin punainen, vihreä ja sininen komponentti saa liukulukuarvon nollan ja ykkösen väliltä.</p>
+
+<pre><code>blue   = (0.200, 0.400, 1.000)
+green  = (0.451, 0.824, 0.086)
+red    = (1.000, 0.200, 0.400)
+yellow = (0.988, 0.914, 0.310)
+black  = (0.000, 0.000, 0.000)
+gray   = (0.502, 0.502, 0.502)
+white  = (1.000, 1.000, 1.000)
+brkRed = (0.886, 0.031, 0.000)
+</code></pre>
+
+<p>Tilarivi käyttää Gtk:n piirtomallia, jossa komponentit ovat kokonaislukuarvoja väliltä 0..65535.</p>
+
+<pre><code>toWord x = round (x*65535.0)
+toGtkColor (r,g,b) = Color (toWord r) (toWord g) (toWord b)
+toGtkColors xs = [toGtkColor x | x &lt;- xs]
+</code></pre>
+
+<p>Virheen sattuessa tilariville ilmestyy teksti &ldquo;Korjaa virheet!&rdquo; ja tilarivin taustaväri muuttuu punaiseksi. Muussa tapauksessa tilarivi on tyhjä ja läpinäkyvä.</p>
+
+<pre><code>drawStatusText gsRef = do
+  gs &lt;- readIORef gsRef
+  if (oldStatus gs) /= Error
+    then setStatusText "" (toGtkColor white) gs
+    else setStatusText "Korjaa virheet!" (toGtkColor red) gs
+</code></pre>
+
+<p>Läpinäkyvyyden saavuttamiseksi otamme komponentin oletustaustavärin talteen käyttöliittymää luotaessa kenttään <code>gStyle</code>, joka on tyyppiä <code>Style</code>. Se tapahtuu funktiolla <code>widgetGetStyle</code>. Tapahtumalaatikko on oliohierarkiassa tilarivin vanhempi ja viite siihen saadaan funktiolla <code>widgetGetParent</code>.</p>
+
+<pre><code>  style  &lt;- widgetGetStyle window
+
+modify parent color text gs = do
+  if (text == "")
+    then do
+      bg &lt;- styleGetBackground (gStyle (g gs)) StateNormal
+      widgetModifyBg parent StateNormal bg
+    else widgetModifyBg parent StateNormal color
+
+setStatusText text color gs = do
+  let label = gStatusbar (g gs)
+  labelSetText label text
+  parent &lt;- widgetGetParent label
+  case parent of
+    Nothing -&gt; print "No parent"
+    Just parent -&gt; modify parent color text gs
+  return ()
+</code></pre>
+
+<p>Ohjelman käynnistyessä muutamme tilarivin vihreäksi tekstillä &ldquo;Voit aloittaa.&rdquo;</p>
+
+<pre><code>  setStatusText "Voit aloittaa." (toGtkColor green) gs
+</code></pre>
+
+<p>Lisäämme vielä funktiokutsun <code>drawStatusText</code> tapahtumankäsittelijään <code>whenEntryChanged</code>, jolloin saamme kaikki kolme tilarivin muunnelmaa, kuten kuvassa.</p>
+
+<p><img src="../pics/statusbar123.png" alt="" /></p>
+
+<p>Ohjelmakoodi: <a href="../code/statusbar.hs">statusbar.hs</a></p>
+
+<h1>Ajastimen väripalkki</h1>
+
+<p>Tulos mitataan puolen minuutin välein. Lisäämme ohjelmaan kapean väripalkin osoittamaan mittaushetken. Palkin väri ilmaisee kuinka korkealle tuloksissa mitattu tulos sijoittuu.</p>
+
+<h2>Väriteema</h2>
+
+<p>Kokeilemme väriteemaa erillisessä ohjelmassa, jonka laadimme seuraavaksi.</p>
+
+<p>Värikoodi määräytyy kakkosen logaritmina HSV-värisävyinä. Kylläisyys (Saturation) määritellään vakioksi 0.40. Värisävy (Hue) vaihtelee nollasta ykköseen, likimäärin valon spektrin tavoin. Kirkkaus (Value) vaihtelee välillä (1.00, 0.25).</p>
+
+<p>Tulos väliltä (0,5000) muunnetaan logaritmisena välille (0.00, 12.3).</p>
+
+<pre><code>hueLimits  = (0.00, 1.00)
+valLimits  = (1.00, 0.25)
+limitsFrom = (0.00, 12.3)
+</code></pre>
+
+<p><img src="../pics/resultColorTheme.png" alt="" /></p>
+
+<pre><code>$ ghci
+Prelude&gt; [2^x | x &lt;- [0..12]]
+[1,2,4,8,16,32,64,128,256,512,1024,2048,4096]
+</code></pre>
+
+<p>Kun värin HSV-arvo on selvillä, piirretään indikaattori Cairon piirtotoimenpiteiden avulla.</p>
+
+<pre><code>drawColorLine hue sat val = do
+  let (r,g,b) = hsvToRgb (hue,sat,val)
+      text = "hue="++(f02 hue)++"  sat="++(f02 sat)++"  val="++(f02 val)
+  setSourceRGB r g b
+  rectangle 40 10 300 3
+  fill
+  rectangle 10 10 20 20
+  fill
+  setSourceRGB 0 0 0
+  rectangle 10 10 20 20
+  stroke
+  paintText 40 17 text
+</code></pre>
+
+<p>Myös kuvatekstit piirretään Cairon funktioilla.</p>
+
+<pre><code>paintText x y text = do
+  fntDscr &lt;- liftIO (fontDescriptionFromString "Sans 8")
+  layout &lt;- createLayout (text)
+  liftIO (layoutSetFontDescription layout (Just fntDscr))
+  moveTo x y
+  setSourceRGB 0 0 0
+  showLayout layout
+</code></pre>
+
+<p>Pienet laatikot piirretään funktiolla <code>renderWithDrawable</code>, arvoilla, jotka saadaan aiemmin kuvatulla laskukaavalla.</p>
+
+<pre><code>drawCanvas2 canvas _evt = do
+  dw &lt;- widgetGetDrawWindow canvas
+  mapM
+    (\(y,twoToY) -&gt; renderWithDrawable dw (drawBox y twoToY))
+    [(y, 2.0**y) | y &lt;- [0.00..12.00]]
+  return True
+</code></pre>
+
+<p>Yksittäinen laatikko piirretään Cairon piirtotoimenpiteiden avulla funktiossa <code>drawBox</code>.</p>
+
+<pre><code>drawBox y rankD = do
+  let colorPoint = logBase 2.0 rankD
+      sat = 0.40
+      hue = ptAlong hueLimits limitsFrom colorPoint
+      val = ptAlong valLimits limitsFrom colorPoint
+      (r,g,b) = hsvToRgb (hue,sat,val)
+  setSourceRGB r g b
+  rectangle 10 (10+y*24) 20 20
+  fill
+  setSourceRGB 0 0 0
+  rectangle 10 (10+y*24) 20 20
+  stroke
+  paintText 40 (13+y*24) (show (round (rankD)))
+</code></pre>
+
+<p>Ohjelman lähdekoodi: <a href="../code/resultColorTheme.hs">resultColorTheme.hs</a></p>
+
+<h2>Väripalkki pääohjelmassa</h2>
+
+<p>Luomme tulosilmaisimen piirtoalueen <code>timingCanvas</code> muiden graafisten komponenttien yhteydessä funktiossa <code>createGUI</code>. Tulosilmaisin on 3 pikselin korkuinen, kapea leveä yksivärinen raita, joka näytetään lyhyen hetken ajan aina puolen minuutin välein. Sen leveys skaalautuu riippuen yläpuolella olevien taulukoiden leveydestä, ollen kuitenkin vähintään 120 pikseliä.</p>
+
+<pre><code>  timingCanvas &lt;- drawingAreaNew
+  widgetSetSizeRequest timingCanvas 120 3
+  onExpose timingCanvas (
+    drawTimingCanvas gsRef timingCanvas)
+  boxPackStart innerVBox1 timingCanvas PackNatural 0
+</code></pre>
+
+<p>Aktivoimme tulosilmaisimen piirron harvoin päivitettävien taulujen uudelleenpiirron yhteydessä.</p>
+
+<pre><code>renewSeldomTables gs iCur = do
+  (newGs, shownRs) &lt;- renewTableI gs iCur
+  renewTableR newGs shownRs
+  widgetQueueDraw (gTimingCanvas (g gs))
+  return newGs { showTimingPict = True }
+</code></pre>
+
+<p>Tarvitsemme pääohjelman tilassa tiedon tulosilmaisimen näkyvyydestä. Kenttä <code>showTimingPict</code> on tyyppiä <code>Bool</code>, ja saa oletuksena arvon <code>False</code>.</p>
+
+<p>Ilmaisimen piirron olemme jo käyneet suurelta osin lävitse. Ilmaisin piirretään jos kenttä <code>showTimingPict</code> on saanut arvon <code>True</code>, muutoin sitä ei piirretä. Funktio <code>drawEmptyPicture</code> on sama kuin virhekuviota piirrettäessä, ainoastaan parametri <code>canvas</code> osoittaa tulosilmaisimen piirtoalueelle eikä virhekuvion piirtoalueelle.</p>
+
+<pre><code>drawTimingCanvas gsRef canvas _evt = do
+  gs &lt;- readIORef gsRef
+  if (showTimingPict gs)
+    then drawTimingPicture gs canvas
+    else drawEmptyPicture canvas
+  writeIORef gsRef gs { showTimingPict = False }
+  return True
+
+hueLimits  = (0.00, 1.00)
+valLimits  = (1.00, 0.25)
+limitsFrom = (0.00, 12.3)
+
+ptAlong limitsTo limitsFrom pointFrom =
+  to0 + distTo*((ptFrom - from0)/distFrom)
+  where
+    (to0,to1) = limitsTo
+    distTo = to1 - to0
+    (from0,from1) = limitsFrom
+    distFrom = from1 - from0
+    ptFrom = from0 `max` pointFrom `min` from1
+
+drawTimingRect w h (r,g,b) = do
+  rectangle 0 0 w h
+  setSourceRGB r g b
+  fill
+
+drawTimingPicture gs canvas = do
+  row &lt;- listStoreGetValue (gModelR (g gs)) 2
+  (wInt,hInt) &lt;- widgetGetSize canvas 
+  drawWin &lt;- widgetGetDrawWindow canvas
+  let (w,h) = (intToDouble wInt, intToDouble hInt)
+      rankD = intToDouble (rRank row)
+      colorPoint = logBase 2.0 rankD
+      sat = 0.40
+      hue = ptAlong hueLimits limitsFrom colorPoint
+      val = ptAlong valLimits limitsFrom colorPoint
+      (r,g,b) = hsvToRgb (hue,sat,val)
+  renderWithDrawable drawWin (drawTimingRect w h (r,g,b))
+  timeoutAdd (onTimeToClear canvas) 1000
+  return True
+</code></pre>
+
+<p>Tulosilmaisimen piirto käynnistää ajastimen, joka laukeaa sekunnin kuluttua piirtämisestä.</p>
+
+<pre><code>  timeoutAdd (onTimeToClear canvas) 1000
+</code></pre>
+
+<p>Tällöin kutsutaan funktiota <code>onTimeToClear</code>.</p>
+
+<pre><code>onTimeToClear canvas = do
+  widgetQueueDraw (canvas)
+  return False
+</code></pre>
+
+<p><img src="../pics/timingCanvas.png" alt="" /></p>
+
+<p>Ohjelmakoodi kokonaisuudessaan: <a href="../code/timingCanvas.hs">timingCanvas.hs</a></p>
+
+<h1>Avustava näppäimistö</h1>
+
+<p>Aloittelijoita varten laadimme ruudulle kuvan, joka näyttää seuraavan kirjoitettavan kirjaimen paikan näppäimistöllä. Komponentin nimi on <code>gHelperCanvas</code> ja se on tyyppiä <code>DrawingArea</code>.</p>
+
+<pre><code>data GUI = NotCreated | GUI {
+  gWindow :: Window,
+  gErrorCanvas, gTimingCanvas, gHelperCanvas :: DrawingArea,
+  ...
+}
+</code></pre>
+
+<p>Näppäimistöä varten tallennamme ohjelman tilatietueeseen kentät <code>lastLetter</code> ja <code>nextLetter</code>, jotka ovat tyyppiä <code>Char</code> ja pitävät sisällään edellisen ja seuraavan kirjoitettavan merkin.</p>
+
+<pre><code>data State = State {
+  lastLetter,nextLetter :: Char,
+  ...
+}
+</code></pre>
+
+<p>Avustava näppäimistö on valinnainen, joten lisäämme asetuksiin kentän <code>useHelper</code>, joka saa arvon <code>True</code> silloin kun näppäimistö halutaan näyttää ja arvon <code>False</code> silloin kun näppäimistöä ei näytetä. Samoin varaamme käyttäjälle mahdollisuuden muuttaa näppäimistöjärjestystä. Näppäimistön rivit talletetaan merkkijonoina muuttujiin <code>keyrow1</code>, <code>keyrow2</code> ja <code>keyrow3</code>.</p>
+
+<pre><code>data Settings = Settings {
+  ...
+  useHelper :: Bool,
+  keyrow1,keyrow2,keyrow3 :: String
+} 
+</code></pre>
+
+<p>Oletuksena näppäimistö näytetään ja näppäinrivit otetaan QWERTY-näppäimistöltä. Näppäimet väritetään vihreällä, punaisella, keltaisella tai sinisellä, riippuen siitä minkä sormen alueelle ne QWERTY-näppäimistöön perustuen kuuluvat.</p>
+
+<pre><code>defaultSettings = Settings {
+  useHelper = True,
+  keyrow1 = keyboard !! 0,
+  keyrow2 = keyboard !! 1,
+  keyrow3 = keyboard !! 2
+}
+
+keyboard = qwerty
+
+qwerty = [
+  "qwertyuiopå",
+  "asdfghjklöä",
+  " zxcvbnm,.-"]
+
+qwertyAreas = ["rfvujm", "edcik,", "wsxol.", "qazpö-"]
+areaColors  = [blue, yellow, red, green]
+</code></pre>
+
+<p>Ikkunassa avustavalle näppäimistölle varataan 275x73 pikselin tila ja piirtämisestä huolehtiva tapahtumankäsittelijä <code>onExpose</code> kutsuu funktiota <code>drawKeyrowsCanvas</code>.</p>
+
+<pre><code>  keyrowsCanvas &lt;- drawingAreaNew
+  widgetSetSizeRequest keyrowsCanvas 275 73
+  onExpose keyrowsCanvas (
+    drawKeyrowsCanvas gsRef keyrowsCanvas)
+  boxPackStart innerVBox2 keyrowsCanvas PackNatural 0
+</code></pre>
+
+<p>Piirtorutiinit on määriteltynä seuraavassa. Ne käyttävät tuttuja Cairon piirtofunktioita.</p>
+
+<pre><code>qwertyColor letter =
+  if null as then Nothing else Just (areaColors !! (head as))
+  where
+    as = [a |(a,i) &lt;- zip [0..] qwertyAreas, letter `elem` i]
+
+qwertyLetter x y =
+  if y &lt; length qwerty &amp;&amp; x &lt; length (qwerty!!y)
+    then (qwerty !! y) !! x
+    else ' '
+
+drawRect x y r1 (r,g,b) filled = do
+  rectangle x y r1 r1
+  setSourceRGB r g b
+  if filled then fill else stroke
+
+paintLetter x y letter (r,g,b) = do
+  fntDscr &lt;- liftIO (fontDescriptionFromString "Sans 8")
+  layout &lt;- createLayout (letter)
+  liftIO (layoutSetFontDescription layout (Just fntDscr))
+  moveTo x y
+  setSourceRGB r g b
+  showLayout layout
+
+drawKey x y letter selected dupl = do
+  setLineWidth 1.0
+  let co = qwertyColor(qwertyLetter x y)
+      botColor = if selected then white else black
+      selColor = if dupl     then gray  else black
+  case co of
+    Just c -&gt; drawRect (intToDouble (zentr xx)) 
+                       (intToDouble (zentr yy)) 
+                       (intToDouble r2)
+                       c True
+    Nothing -&gt; return ()
+  when selected (drawRect (intToDouble xx) 
+                          (intToDouble yy) 
+                          (intToDouble r1)
+                          selColor True)
+  drawRect (intToDouble xx) (intToDouble yy) (intToDouble r1) botColor False
+  paintLetter (intToDouble (xx+2)) (intToDouble (yy+2)) letter botColor
+  where
+    r1 = 18
+    r2 = 21
+    zentr z = z - (r2-r1) `div` 2
+    deltaXs = [3,12,0]
+    margin = 5
+    xx = x*r2+deltaXs!!y + margin
+    yy = y*r2            + margin
+
+drawKeyrowsCanvas gsRef canvas _evt = do 
+  gs &lt;- readIORef gsRef
+  writeIORef gsRef gs {
+    lastLetter = nextLetter gs
+  }
+  let c = nextLetter gs
+      selected = [toUpper c]
+      dupl = toUpper c == toUpper (lastLetter gs)
+      keymap = [keyrow1 (s gs), keyrow2 (s gs), keyrow3 (s gs)] 
+      leK y = length (keymap !! y)
+      keyK x y = [toUpper ((keymap !! y) !! x)]
+  drawWin &lt;- widgetGetDrawWindow canvas
+  renderWithDrawable drawWin (do
+    mapM 
+      ( \(x,y,k) -&gt; drawKey x y k (k == selected) dupl)
+      [(x,y,keyK x y)| y &lt;- [0..2], x &lt;- [0..(leK y)-1], keyK x y /= " "]
+    return True)
+</code></pre>
+
+<p>Funktio <code>toUpper</code> saadaan kirjastosta <code>Data.Char</code>.</p>
+
+<p>Avustavan näppäimistön uudelleenpiirtoa pyydetään tapahtumankäsittelijässä <code>whenEntryChanged</code>, jossa myös päätellään seuraava väritettävä näppäin.</p>
+
+<pre><code>nextChar n str = 
+  head (drop n (str ++ " "))
+
+whenEntryChanged gsRef = do
+  ...
+  writeIORef gsRef newGs {
+    ...
+    nextLetter = nextChar cprfix label1Str
+    }
+  ...
+  widgetQueueDraw (gHelperCanvas (g gs))
+  ...
+</code></pre>
+
+<p>Rivin vaihtuessa ja ohjelman käynnistyessä seuraava näppäin on ensimmäisen tekstirivin ensimmäinen kirjain.</p>
+
+<pre><code>   nextLetter = head ((labelStrs !! 0) ++ " ")
+</code></pre>
+
+<p><img src="../pics/helperCanvas.png" alt="" /></p>
+
+<p>Ohjelmakoodi: <a href="../code/helperCanvas.hs">helperCanvas.hs</a></p>
+
+<h1>Asetusdialogi</h1>
+
+<p>Asetuksista olemme tähän mennessä määritelleet kentät aloitusriville, rivinpituudelle, tekstitiedoston nimelle, kirjasimelle sekä näytetäänkö apunäppäimistö ja apunäppäimistön merkkijärjestys.</p>
+
+<pre><code>data Settings = Settings {
+  startLine :: Int,
+  lineLen :: Int,
+  textfile :: String,
+  font :: String,
+  useHelper :: Bool,
+  keyrow1,keyrow2,keyrow3 :: String
+} deriving (Read, Show)
+
+defaultSettings = Settings {
+  startLine = 0,
+  lineLen = 60,
+  textfile = "morse.txt",
+  font = "monospace 10",
+  useHelper = True,
+  keyrow1 = keyboard !! 0,
+  keyrow2 = keyboard !! 1,
+  keyrow3 = keyboard !! 2
+}
+</code></pre>
+
+<p>Asetusdialogi tulee sisältämään taulukon, johon edellä esitellyt arvot sijoitetaan.</p>
+
+<p><img src="../pics/settingsDialog.png" alt="" /></p>
+
+<p>Määrittelemme suomenkieliset otsikot taulukolle sekä tavan totuusarvojen <code>True</code> ja <code>False</code> esittämiselle.</p>
+
+<pre><code>colTitle = ["Muuttuja", "Arvo"]
+
+showBool True  = "Kyllä"
+showBool False = "Ei"
+</code></pre>
+
+<p>Taulokon sisältö määräytyy olemassaolevien asetusten mukaisesti. Kokonaislukuarvot <code>startLine</code> ja <code>lineLen</code> näytetään merkkijonona funktion <code>show</code> avulla ja totuusarvo edellä kuvatun mukaisesti vaihtoehdoilla Kyllä/Ei. Muuttujat <code>textfile</code> ja <code>font</code> asetetaan suoraan päävalikosta, joten nämä arvot jätämme huomitta (merkintätapana alaviiva).</p>
+
+<pre><code>settingsTable (Settings a b _ _ c e f g) = [
+  ["Aloitusrivi",            show a],
+  ["Rivinpituus (mrk)",      show b],
+  ["Näytä näppäimistö (K/E)",showBool c],
+  ["Näppäimistön ylärivi",   e],
+  ["Näppäimistön keskirivi", f],
+  ["Näppäimistön alarivi",   g] ]
+</code></pre>
+
+<p>Varsinainen dialogi-ikkuna määritellään standardinmukaisesti. Kun käyttäjä sulkee dialogi-ikkunan painamalla OK-näppäintä, otetaan uudet asetukset käyttöön, muutoin palataan vanhoihin.</p>
+
+<pre><code>setPreferences gsRef = do
+  oldGs &lt;- readIORef gsRef
+  result &lt;- preferencesDialog "Asetukset" oldGs gsRef
+  case result of
+    Just "OK" -&gt; do
+      newGs &lt;- readIORef gsRef
+      when ((lineLen   (s oldGs)) /= (lineLen   (s newGs))) (getLines gsRef)
+      when ((startLine (s oldGs)) /= (startLine (s newGs))) (renewLabels gsRef)
+      afterConfig gsRef
+    otherwise -&gt; do
+      writeIORef gsRef oldGs
+</code></pre>
+
+<p>Dialogi-ikkunan graafinen ulkoasu näppäimineen on määritelty seuraavassa:</p>
+
+<pre><code>preferencesDialog title gs gsRef = do
+  dialog &lt;- dialogNew
+  set dialog [ windowTitle := title ]
+  dialogAddButton dialog stockCancel ResponseCancel
+  dialogAddButton dialog stockOk ResponseOk
+
+  model &lt;- listStoreNew (settingsTable (s gs))
+  view  &lt;- treeViewNewWithModel model
+  setupSettingsView gsRef view model
+
+  upbox &lt;- dialogGetUpper dialog
+  boxPackStart upbox view PackNatural 10
+  widgetShowAll upbox
+  response &lt;- dialogRun dialog
+  widgetDestroy dialog
+  case response of
+    ResponseOk -&gt; do
+      return (Just "OK")
+    ResponseCancel -&gt; do
+      return Nothing
+    ResponseDeleteEvent -&gt; do
+      return Nothing
+    _ -&gt; return Nothing
+</code></pre>
+
+<p>Esitettävä taulukko on komponentti tyyppiä <code>TreeView</code>.</p>
+
+<pre><code>setupSettingsView gsRef view model = do
+  mapM 
+    ( \(title, i) -&gt; newcol view model title i )
+    ( zip colTitle [0..] )
+  where
+    newcol view model title i = do
+      renderer &lt;- cellRendererTextNew
+      col &lt;- treeViewColumnNew
+      cellLayoutPackStart col renderer True
+      cellLayoutSetAttributes col renderer model (
+        \row -&gt; [ cellText := row !! i, cellTextEditable := (i==1) ])
+      treeViewColumnSetTitle col title
+      treeViewAppendColumn view col
+      on renderer edited (onCellEdited gsRef model)
+</code></pre>
+
+<p>Syötetyn arvon oikeellisuus on tarkistettava. Totuusarvoina hyväksymme alkukirjaimen K tarkoittamaan arvoa <code>True</code>, muutoin arvoa <code>False</code>.</p>
+
+<pre><code>readInt :: String -&gt; IO Int
+readInt s = readIO s
+
+readBool :: String -&gt; IO Bool
+readBool s = readIO s
+
+readKBool :: String -&gt; IO Bool
+readKBool s = do 
+  let c = toUpper (head (s ++ " "))
+      result = if c == 'K' then True else False
+  return result
+</code></pre>
+
+<p>Jäsennysfunktiona toimii seuraavassa määritelty <code>tryFunc</code>. Se saa parametrinaan viitteen asetuksiin ja listan asetusdialogin arvoista. Funktiota kutsutaan <code>catch</code>-lauseessa, jolloin jäsennysvirhe yhdessäkin kentässä johtaa poikkeuksen nostamiseen ja vanhojen arvojen palauttamiseen.</p>
+
+<pre><code>v lst i = (lst !! i) !! 1
+
+tryFunc g lst = do
+  a &lt;- readInt (v lst 0)
+  b &lt;- readInt (v lst 1)
+  c &lt;- readKBool (v lst 2)
+  return g {
+    startLine = a,
+    lineLen = b,
+    useHelper = c,
+    keyrow1 = v lst 3,
+    keyrow2 = v lst 4,
+    keyrow3 = v lst 5
+  } 
+</code></pre>
+
+<p>Taulukon arvot päivitetään funktiolla <code>refreshSettingsTable</code>.</p>
+
+<pre><code>refreshSettingsTable model newS = do
+  mapM
+    ( \(i,newRow) -&gt; listStoreSetValue model i newRow )
+    ( zip [0..] (settingsTable newS) )
+</code></pre>
+
+<p>Solun muutos käsitellään funktiossa <code>onCellEdited</code>, joka pitää sisällään edellä esitellyn jäsennysfunktion <code>tryFunc</code>.</p>
+
+<pre><code>onCellEdited gsRef model path newText = do
+  gs &lt;- readIORef gsRef
+  let i = head path
+  [key,oldText] &lt;- listStoreGetValue model i
+  listStoreSetValue model i [key,newText]
+  lst &lt;- listStoreToList model
+  newS &lt;- tryFunc (s gs) lst `catch` 
+    \(SomeException e) -&gt; return (s gs)
+  refreshSettingsTable model newS
+  writeIORef gsRef gs { settings = newS }
+</code></pre>
+
+<p>Kun asetukset on hyväksytty, otamme ne käyttöön funktiossa <code>afterConfig</code>, joka asettaa apunäppäimistön näkyyden ja kirjasimen.</p>
+
+<pre><code>afterConfig gsRef = do
+  setHelperVisibility gsRef
+  setFonts gsRef
+
+setHelperVisibility gsRef = do
+  gs &lt;- readIORef gsRef
+  case useHelper (s gs) of
+    True  -&gt; widgetShow (gHelperCanvas (g gs))
+    False -&gt; widgetHide (gHelperCanvas (g gs))
+  resize (gWindow (g gs))
+
+resize window = do
+  Requisition w h &lt;- widgetSizeRequest window
+  windowResize window w h
+</code></pre>
+
+<p>Tekskikentistä saadaan sopivan kokoisia asettamalla niiden leveydeksi muuttujan <code>lineLen</code> arvon lisättynä kolmella.</p>
+
+<pre><code>  labelSetWidthChars (gLabel1 gui) (lineLen (s gs) + 3)
+</code></pre>
+
+<p>Ohjelmakoodi kokonaisuudessaan: <a href="../code/settingsDialog.hs">settingsDialog.hs</a></p>
+
+<h1>Kun tiedoston luku ei onnistu</h1>
+
+<p>Kirjoitettavaksi tarkoitettu tekstitiedosto on tähän saakka luettu funktiolla <code>readFile</code>.</p>
+
+<pre><code>  originalText &lt;- readFile (textfile (s gs))
+</code></pre>
+
+<p>Kun tiedostoa ei löydy, seurauksena on virheilmoitus päätteelle ja ohjelman suorituksen keskeytyminen. Varaudumme tähän ongelmaan määrittelemällä funktion <code>tryReadFile</code>, jota kutsumme funktion <code>readFile</code> sijasta.</p>
+
+<pre><code>  originalText &lt;- tryReadFile (textfile (s gs))
+
+tryReadFile fname = do
+  text &lt;- readFile fname `catch` 
+    \(SomeException e) -&gt; ( do 
+      dialog &lt;- messageDialogNew Nothing [] MessageWarning ButtonsOk 
+        "Avaa tiedosto"
+      messageDialogSetSecondaryText dialog 
+        ("Tiedostoa " ++ fname ++ " ei voitu lukea.")
+      dialogRun dialog
+      widgetDestroy dialog
+      return (unlines proverbs))
+  return text
+</code></pre>
+
+<p>Funktio <code>tryReadFile</code> kutsuu yhä edelleen funktiota <code>readFile</code>, mutta funktion <code>catch</code> ensimmäisenä parametrina, jolloin funktion suorituksen epäonnistuessa nostettuun poikkeukseen vastataan dialogi-ikkunalla.</p>
+
+<p><img src="../pics/fileError.png" alt="" /></p>
+
+<p>Virhetilanteessa luemme tekstiriveiksi latinankielisiä sananlaskuja, jotka määrittelemme ohjelmassa.</p>
+
+<pre><code>proverbs = [
+  "Castigat ridendo mores.",
+  "Vulpes pilum mutat, non mores!",
+  "Aut viam inveniam aut faciam.",
+  "Qui multum habet, plus cupit.",
+  "Praestat cautela quam medela.",
+  "Mali principii malus finis.",
+  "Iucundum est narrare sua mala.",
+  "Imperare sibi maximum imperium est.",
+  "Qui non proficit, deficit.",
+  "Quien me amat, amet et canum meum.",
+  "Dives est qui sibi nihil deesse putat."
+  ]
+</code></pre>
+
+<p>Ohjelmakoodi: <a href="../code/fileError.hs">fileError.hs</a></p>
+
+<h1>Tietoja-dialogi</h1>
+
+<p>Asetamme päävalikon valinnan <code>gtk-about</code> (&ldquo;Tietoja&hellip;&rdquo;) kutsumaan funktiota <code>showResultPics</code>. Se avaa dialogi-ikkunan, joka esittää tulosten kuvaajat.</p>
+
+<pre><code>menuBarDescr = 
+  [("_Tiedosto", 
+    [("gtk-open", openFile),
+     ("gtk-select-font", openFont),
+     ("gtk-preferences", setPreferences),
+     ("gtk-about", showResultPics),
+     ("gtk-quit", quitProgram)])
+  ]
+</code></pre>
+
+<p>Toteutamme kuvaajien piirron myöhemmin. Dialogi-ikkuna esittää kerrallaan yhden kuvaajan. Valinnat &ldquo;Alas&rdquo; ja &ldquo;Ylös&rdquo; avaavat uuden dialogi-ikkunan uudella kuvaajalla. Painikkeiden palautusarvot ovat <code>ResponseUser 1</code> ja <code>ResponseUser (maxNum-1)</code>. Uusi dialogi-ikkuna luodaan komennolla <code>showResultDialog titles files ((num + n) mod maxNum</code>. Valinnan &ldquo;Sulje&rdquo; palautusarvo on <code>ResponseDeleteEvent</code>. Esc-näppäimen palautusarvo dialogi-ikkunoissa on oletusarvoisesti <code>ResponseDeleteEvent</code>.</p>
+
+<pre><code>showResultDialog titles files num = do
+  dialog &lt;- dialogNew
+  let maxNum = length framelist
+  set dialog [ 
+    windowTitle := "Tietoja (" ++ show (num+1) ++ "/" ++ show maxNum ++ ")"]
+  upbox &lt;- dialogGetUpper dialog
+  vbox1 &lt;- vBoxNew False 0
+  createFrame vbox1 (titles !! num) (files !! num)
+  boxPackStart upbox vbox1 PackNatural 0
+
+  dialogAddButton dialog stockGoDown (ResponseUser 1)
+  dialogAddButton dialog stockGoUp (ResponseUser (maxNum-1))
+  dialogAddButton dialog stockClose ResponseClose
+  widgetShowAll upbox
+  response &lt;- dialogRun dialog
+  widgetDestroy dialog
+  case response of
+    ResponseUser n -&gt; showResultDialog titles files ((num + n) `mod` maxNum)
+    _ -&gt; return ()
+  return () 
+
+showResultPics gsRef = do
+  gs &lt;- readIORef gsRef
+  let 
+    valuess = [(
+      picName fn gs,
+      s,collectResults x y c (r gs)) | (fn,s,x,y,c) &lt;- framelist]
+    (w,h)  = picSize (s gs)
+    titles = [s | (_,s,_,_,_) &lt;- framelist]
+    files  = map (\m -&gt; picName m gs) [f | (f,_,_,_,_) &lt;- framelist]
+  mapM (\(fn,s,v) -&gt; createImage fn w h draw1 v) valuess
+  showResultDialog titles files 0
+  return () 
+</code></pre>
+
+<p><img src="../pics/aboutDialog-date-vs-speed.png" alt="" /></p>
