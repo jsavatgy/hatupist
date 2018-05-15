@@ -8,7 +8,7 @@ voit seurata kuinka ohjelma valmistuu pala palalta.
 
 ![](Hatupist_002.png)
 
-Typing speed practice program using Gtk2hs and Haskell. The most recent one is `hatupist-104.hs`. You can run it in interpreted mode by `runhaskell hatupist-104.hs`.
+Typing speed practice program using Gtk2hs and Haskell. The most recent one is `hatupist-105.hs`. You can run it in interpreted mode by `runhaskell hatupist-105.hs`.
 
 You can follow the 
 [english-making-of](/english-making-of)
